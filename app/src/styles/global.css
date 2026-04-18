@@ -1,6 +1,18 @@
 :root {
-  --sl-font: "Space Grotesk Variable", sans-serif;
-  --sl-font-system-mono: "Space Mono", monospace;
+    --sl-font: "Inter Variable", sans-serif;
+    --sl-font-system-mono: "Space Mono", monospace;
+
+    --sl-color-accent-low: #1e3a8a;
+    --sl-color-accent: #3b82f6;
+    --sl-color-accent-high: #bfdbfe;
+    --sl-color-text-accent: #60a5fa;
+}
+
+:root[data-theme="light"] {
+    --sl-color-accent-low: #dbeafe;
+    --sl-color-accent: #2563eb;
+    --sl-color-accent-high: #1e3a8a;
+    --sl-color-text-accent: #1d4ed8;
 }
 
 .expressive-code,
@@ -8,6 +20,36 @@ pre,
 .expressive-code pre > code,
 code,
 starlight-file-tree {
-  font-family: "Space Mono", monospace !important;
-  font-variant-ligatures: none !important;
+    font-family: "Space Mono", monospace !important;
+    font-variant-ligatures: none !important;
+}
+
+.sl-markdown-content :is(h2, h3) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    line-height: 1.2;
+}
+
+.sl-markdown-content table {
+    display: table;
+    width: 100%;
+    margin-block: 1.5rem;
+}
+
+starlight-tabs :is(.tab-content, [role="tabpanel"]) {
+    /* remove giant top padding, keep only horizontal and bottom */
+    padding: 0.25rem 1rem 1.5rem !important;
+}
+
+/* make steps align with text and have a small left padding */
+.sl-markdown-content .steps {
+    margin-inline-start: 0.5rem !important;
+    /* add a small left padding to align with text */
+    padding-inline-start: 1rem !important;
+}
+
+/* make the first child of tab content have a small top margin */
+starlight-tabs :is(.tab-content, [role="tabpanel"]) > :first-child {
+    margin-top: 0.5rem !important;
 }

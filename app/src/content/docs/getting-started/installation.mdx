@@ -1,0 +1,109 @@
+---
+title: Инструкция по установке
+description: Пошаговое руководство по развертыванию LunaStore.
+tableOfContents: false
+---
+
+import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Системные требования">
+  Перед началом убедитесь, что ваш сервер соответствует минимальным характеристикам LunaStore:
+  - **Процессор:** 2 и более ядра
+  - **ОЗУ:** 4 ГБ и более
+  - **Диск:** 20+ ГБ свободного места
+  - **ПО:** Docker, Docker Compose, Python 3.12+, PIP
+</Aside>
+
+Выберите удобный способ развертывания:
+
+<Tabs>
+<TabItem label="Автоматическая установка" icon="rocket">
+    {/* Мы убрали заголовок "Как запустить" и сразу даем выбор ОС */}
+    
+    <Aside type="tip" title="Запуск скрипта">
+      Выберите вашу операционную систему ниже, чтобы увидеть команды для терминала:
+    </Aside>
+
+    <Tabs>
+      <TabItem label="Linux (.sh)">
+        ```bash
+        chmod +x setup.sh && ./setup.sh
+        ```
+        *Используйте `bash setup.sh`, если нет прав на выполнение.*
+      </TabItem>
+      <TabItem label="Windows (.ps1)">
+        ```powershell
+        .\setup.ps1
+        ```
+      </TabItem>
+    </Tabs>
+  </TabItem>
+  
+  <TabItem label="Ручная установка" icon="setting">
+    <Steps>
+    1.  ### Скачивание исходников
+        ```bash
+        git clone https://git.myslivets.com/myslivets/lunastore
+        cd lunastore
+        ```
+
+    2.  ### Установка зависимостей
+        ```bash
+        pip install -r requirements.txt
+        ```
+
+    3.  ### Настройка окружения
+        ```bash
+        cp .env.example .env
+        ```
+        *(Отредактируйте .env, заполнив параметры БД и OpenID)*
+
+    4.  ### Подготовка базы данных
+        <Tabs>
+          <TabItem label="Production">
+            ```bash
+            make migrate
+            make cachetable
+            ```
+          </TabItem>
+          <TabItem label="Development">
+            ```bash
+            make dev-migrate
+            make dev-cachetable
+            ```
+          </TabItem>
+        </Tabs>
+
+    5.  ### Создание администратора
+        ```bash
+        make superuser
+        ```
+
+    6.  ### Запуск проекта
+        ```bash
+        make build
+        make up
+        ```
+    </Steps>
+  </TabItem>
+</Tabs>
+
+---
+
+## <Icon name="information" color="var(--sl-color-accent)" /> Архитектура и порты
+
+LunaStore распределен по трем основным контейнерам. Убедитесь, что данные порты открыты в вашем фаерволе:
+
+| Контейнер | Назначение | Порт |
+| :--- | :--- | :--- |
+| **lunaStore** | Основной сайт и контент | `9088` |
+| **lunaStoreAdmin** | Панель управления | `8088` |
+| **lunaStoreAPI** | Функционал API | `7088` |
+
+<Aside type="note">
+  Если вам нужно изменить порты, отредактируйте файл `docker-compose.yml` перед запуском команды `make build`.
+</Aside>
+
+<div style="margin-top: 3rem; text-align: center;">
+  **Нужна помощь?** Загляните в наш [Telegram-канал](https://t.me/lunastore_official)
+</div>

@@ -1,0 +1,72 @@
+---
+title: Введение в API
+description: Основная информация по работе с LunaStore API.
+---
+
+import { Aside, Steps, Tabs, TabItem, Badge, Icon } from '@astrojs/starlight/components';
+
+API LunaStore построено по принципу **RESTful** и позволяет полностью автоматизировать взаимодействие с инстансом.
+
+### <Icon name="setting" color="var(--sl-color-accent)" /> Общая информация
+
+- **Формат данных:** JSON (`application/json`)
+- **Базовый порт (Docker):** `7088`
+- **Кодировка:** UTF-8
+
+---
+
+### <Icon name="error" color="var(--sl-color-accent)" /> Система ошибок
+
+У LunaStore API есть строгая иерархия кодов. Первая цифра кода определяет категорию проблемы:
+
+| Диапазон | Категория ошибки |
+| :--- | :--- |
+| <Badge text="0xxx" variant="note" /> | Ошибки общего типа |
+| <Badge text="1xxx" variant="danger" /> | Ошибки пользователей (User) |
+| <Badge text="2xxx" variant="caution" /> | Ошибки приложений (Application) |
+| <Badge text="3xxx" variant="tip" /> | Ошибки категорий (Category) |
+
+#### Подробный справочник кодов
+
+| Номер | Значение | Описание |
+| :--- | :----- | :--------- |
+| `0` | `EVERYTHING_IS_ALRIGHT` | Все отлично (швепс чуитс) |
+| `1` | `UNKNOWN_ERROR` | Неизвестная ошибка. Обычно, обознает ошибку со стороны Backend'а инстанса (http error 500) |
+| `2` | `VALIDATION_ERROR` | Ошибка валидации. Может возникнуть, если вы не указали значение необходимого поля, при отправке запроса на API |
+| `3` | `NOT_FOUND` | То же самое, что и HTTP ошибка 404 |
+| `1000` | `USER_NOT_FOUND` | Данного пользователя не существует |
+| `1001` | `USER_IS_BLOCKED` | Данный пользователь заблокирован |
+| `2000` | `APPLICATION_NOT_FOUND` | Данное приложение не существует |
+| `2001` | `APPLICATION_IS_UNDER_DMCA` | Данное приложение находится под блокировкой из-за DMCA страйка |
+| `3000` | `CATEGORY_NOT_FOUND` | Данная категория не найдена |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Первый запрос
+
+Попробуйте отправить проверочный запрос (Heartbeat), чтобы убедиться, что инстанс отвечает корректно.
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/service/heartbeat/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+    response = requests.get('https://api.lunastore.app/method/service/heartbeat/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+#### Ожидаемый ответ:
+```json 
+{
+  "status": "ok",
+  "timestamp": "2026-02-03T07:33:25.768663",
+  "version": "2.0"
+}
