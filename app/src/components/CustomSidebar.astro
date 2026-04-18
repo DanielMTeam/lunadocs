@@ -1,0 +1,85 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import DefaultSidebar from '@astrojs/starlight/components/Sidebar.astro';
+import { Icon } from '@astrojs/starlight/components';
+
+const currentPath = Astro.url.pathname;
+const isApi = currentPath.includes('/api');
+
+// create copy of props
+const customProps = { ...Astro.props };
+
+// check if sidebar exists and is an array
+if (customProps.sidebar && Array.isArray(customProps.sidebar)) {
+  if (isApi) {
+    const apiGroup = customProps.sidebar.find(
+      (item) => item.type === 'group' && (item.label === 'API Reference' || item.label === 'Справочник API')
+    );
+    if (apiGroup && apiGroup.type === 'group') {
+      customProps.sidebar = apiGroup.entries;
+    }
+  } else {
+    const guideGroup = customProps.sidebar.find(
+      (item) => item.type === 'group' && item.label === 'Начало работы'
+    );
+    if (guideGroup && guideGroup.type === 'group') {
+      customProps.sidebar = guideGroup.entries;
+    }
+  }
+}
+---
+
+<div class="sidebar-tabs">
+  <a
+    href="/getting-started/installation/"
+    class={!isApi ? 'active' : ''}
+  >
+    <Icon name="document" size="1.2rem" />
+    Руководство
+  </a>
+
+  <a
+    href="/api/"
+    class={isApi ? 'active' : ''}
+  >
+    <Icon name="puzzle" size="1.2rem" />
+    API
+  </a>
+</div>
+
+<DefaultSidebar {...customProps} />
+
+<style>
+  .sidebar-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-tabs a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    color: var(--sl-color-gray-3);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sidebar-tabs a:hover {
+    background-color: var(--sl-color-gray-6);
+    color: var(--sl-color-text);
+  }
+
+  .sidebar-tabs a.active {
+    background-color: var(--sl-color-accent-low);
+    color: var(--sl-color-accent-high);
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 var(--sl-color-accent);
+  }
+</style>

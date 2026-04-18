@@ -53,3 +53,22 @@ starlight-tabs :is(.tab-content, [role="tabpanel"]) {
 starlight-tabs :is(.tab-content, [role="tabpanel"]) > :first-child {
     margin-top: 0.5rem !important;
 }
+
+header .site-title {
+    color: var(--sl-color-text) !important;
+    font-weight: 600 !important;
+}
+
+header .site-title:hover {
+    color: var(--sl-color-gray-2) !important;
+}
+
+.sl-container {
+    padding-inline: 2.5rem !important;
+}
+
+@media (max-width: 50rem) {
+    .sl-container {
+        padding-inline: 1.5rem !important;
+    }
+}

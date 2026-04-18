@@ -19,6 +19,7 @@
     "astro": "^6.0.1",
     "sharp": "^0.34.2",
     "starlight-ion-theme": "^2.4.0",
+    "starlight-sidebar-topics": "^0.7.1",
     "tailwindcss": "^4.1.18"
   }
 }

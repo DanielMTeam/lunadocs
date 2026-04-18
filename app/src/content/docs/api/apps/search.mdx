@@ -1,0 +1,158 @@
+---
+title: search
+description: Поиск приложений исходя из текстового запроса.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/search`
+
+Метод позволяет выполнить поиск приложений, исходя из текстового запроса.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `query` | `string` | **Да** | Текстовый запрос ^_^ |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/search?query=lorem_impus' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    params = {
+        'query': 'lorem_impus',
+    }
+
+    response = requests.get('https://api.lunastore.app/method/marketplace/search', params=params)
+    print(response.json())
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    resp, err := http.Get("https://api.lunastore.app/method/marketplace/search?query=lorem_impus")
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:c-sharp">
+    ```csharp
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+
+    class Program
+    {
+        static async Task Main()
+        {
+            using var client = new HttpClient();
+            var url = "https://api.lunastore.app/method/marketplace/search?query=lorem_impus";
+            
+            try
+            {
+                string response = await client.GetStringAsync(url);
+                Console.WriteLine(response);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine($"Error of request: {e.Message}");
+            }
+        }
+    }
+    ```
+  </TabItem>
+  <TabItem label="C++" icon="seti:cpp">
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <curl/curl.h>
+
+    // callback for write answer in string
+    size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp) {
+        userp->append((char*)contents, size * nmemb);
+        return size * nmemb;
+    }
+
+    int main() {
+        CURL* curl = curl_easy_init();
+        if(curl) {
+            std::string readBuffer;
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/marketplace/search?query=123");
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
+            CURLcode res = curl_easy_perform(curl);
+            if(res == CURLE_OK) {
+                std::cout << readBuffer << std::endl;
+            } else {
+                std::cerr << "cURL error: " << curl_easy_strerror(res) << std::endl;
+            }
+            curl_easy_cleanup(curl);
+        }
+        return 0;
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+При успешном запросе возвращается список, внутри которого находятся объекты `application`.
+
+```json 
+{
+  "1": {
+    "id": 3,
+    "title": "New Test App",
+    "description": "wow, there is a description",
+    "original_author": "unknown",
+    "slogan": "lmao",
+    "price": 0,
+    "requirements": "computer, keyboard and mouse",
+    "screenshot_urls": [
+      "//192.168.48.128:8080/public/48/7b/487b098fd79b05c04df6f48fdba21c52dec936f03197a0b89e7bea3ae5b65bf3.jfif"
+    ],
+    "developer_site": "https://fayzetw.in",
+    "is_demo": false,
+    "is_under_dmca": false,
+    "icon_url": "//192.168.48.128:8080/public/6e/1b/6e1b1b8005bd9c7ccc9c7b8da2b5470eba2ea5eca6464864d420cdf2739f15e4.jfif"
+  }
+}

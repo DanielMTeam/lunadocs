@@ -25,6 +25,18 @@ export default defineConfig({
                     href: "https://t.me/lunastore_official",
                 },
             ],
+            // our custom sidebar
+            components: {
+                Sidebar: "./src/components/CustomSidebar.astro",
+            },
+            plugins: [
+                ion({
+                    icons: {
+                        iconDir: "./src/icons",
+                    },
+                }),
+            ],
+            // menu (folders only)
             sidebar: [
                 {
                     label: "Начало работы",
@@ -38,19 +50,34 @@ export default defineConfig({
                 {
                     label: "API",
                     items: [
+                        { label: "Введение", slug: "api" },
                         {
-                            label: "Введение",
-                            slug: "api",
+                            label: "Приложения",
+                            items: [
+                                {
+                                    label: "getAppInfo",
+                                    slug: "api/apps/getappinfo",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "search",
+                                    slug: "api/apps/search",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Категории",
+                            items: [
+                                {
+                                    label: "getAppList",
+                                    slug: "api/category/getapplist",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
                         },
                     ],
                 },
-            ],
-            plugins: [
-                ion({
-                    icons: {
-                        iconDir: "./src/icons",
-                    },
-                }),
             ],
             customCss: [
                 "@fontsource-variable/inter",
