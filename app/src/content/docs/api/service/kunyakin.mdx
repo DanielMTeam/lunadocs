@@ -1,6 +1,6 @@
 ---
-title: search
-description: Метод позволяет получить информацию о списке приложений, находящихся в определенной категории приложений.
+title: kunyakin
+description: Метод позволяет покекать ^_^
 ---
 
 import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
@@ -9,38 +9,30 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     h1#_top {
         display: none !important;
     }
-    
+
     .sl-markdown-content,
     .content-panel {
         border-top: none !important;
         border-bottom: none !important;
     }
-    
+
     .sl-markdown-content > h1:first-of-type {
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
-    
+
     .sl-markdown-content {
         padding-top: 0 !important;
     }
-    
+
     .content-panel {
         padding-top: 0.0rem !important;
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/search`
+# <Badge text="GET" variant="note" size="medium" /> `/method/service/kunyakin`
 
-Метод позволяет получить информацию о списке приложений, находящихся в определенной категории приложений.
-
----
-
-### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
-
-| Параметр | Тип | Обязательно | Описание |
-| :--- | :--- | :--- | :--- |
-| `id` | `integer` | **Да** | ID категории :-3 |
+Метод позволяет поржать ^_^
 
 ---
 
@@ -50,7 +42,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
   <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/category/getAppList?id=1' \
+      'https://api.lunastore.app/method/service/kunyakin' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -58,17 +50,13 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     ```python
     import requests
 
-    params = {
-        'id': 1,
-    }
-
-    response = requests.get('https://api.lunastore.app/method/category/getAppList', params=params)
+    response = requests.get('https://api.lunastore.app/method/service/kunyakin')
     print(response.json())
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/category/getAppList?id=1")
+    resp, err := http.Get("https://api.lunastore.app/method/service/kunyakin")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -82,8 +70,8 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/category/getAppList?id=1";
-            
+            var url = "https://api.lunastore.app/method/service/kunyakin";
+
             try
             {
                 string response = await client.GetStringAsync(url);
@@ -113,7 +101,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/category/getAppList?id=1");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/service/kunyakin");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
@@ -135,22 +123,9 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
 
-При успешном запросе возвращается список, внутри которого находятся объекты `application`.
+При успешном запросе возвращается подобный ответ:
 
-```json 
+```json
 {
-  "1": {
-    "id": 4,
-    "title": "Test App 1",
-    "description": "Test Description",
-    "original_author": "Daniel Myslivets",
-    "slogan": "Test Slogan",
-    "price": 0,
-    "requirements": "fucking computer",
-    "screenshot_urls": [],
-    "developer_site": "https://fayzetw.in",
-    "is_demo": false,
-    "is_under_dmca": false,
-    "icon_url": "//192.168.48.128:8080/public/f4/55/f455926b139739d0f051279641b3b3b422924584159e526548810fa95010c0de.png"
-  },
+  "answer": "влад кунякин пробудил шаринган"
 }

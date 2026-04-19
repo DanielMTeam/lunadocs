@@ -45,6 +45,10 @@ export default defineConfig({
                             label: "Установка",
                             slug: "getting-started/installation",
                         },
+                        {
+                            label: "Конфигурация",
+                            slug: "getting-started/configuration",
+                        },
                     ],
                 },
                 {
@@ -72,6 +76,31 @@ export default defineConfig({
                                 {
                                     label: "getAppList",
                                     slug: "api/category/getapplist",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Дистрибуции",
+                            items: [
+                                {
+                                    label: "getDistributionsList",
+                                    slug: "api/distributions/getdistributionslist",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Внутренние методы",
+                            items: [
+                                {
+                                    label: "heartbeat",
+                                    slug: "api/service/heartbeat",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "kunyakin",
+                                    slug: "api/service/kunyakin",
                                     badge: { text: "GET", variant: "note" },
                                 },
                             ],
