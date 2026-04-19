@@ -118,6 +118,9 @@ export default defineConfig({
         }),
     ],
     vite: {
+	server: {
+		allowedHosts: ['dev-docs.lunastore.app'],
+	},
         plugins: [tailwindcss()],
     },
 });
