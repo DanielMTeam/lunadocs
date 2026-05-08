@@ -7,18 +7,17 @@ tableOfContents: false
 import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="Системные требования">
-  Перед началом убедитесь, что ваш сервер соответствует минимальным характеристикам LunaStore:
-  - **Процессор:** 2 и более ядра
+  Перед тем, как начать процесс установки на сервер, убедитесь, что он соответствует минимальным характеристикам LunaStore:
+  - **Процессор:** 2 ядра и более
   - **ОЗУ:** 4 ГБ и более
   - **Диск:** 20+ ГБ свободного места
-  - **ПО:** Docker, Docker Compose, Python 3.12+, PIP
+  - **Установленное ПО:** Docker, Docker Compose, Python 3.12+, PIP
 </Aside>
 
 Выберите удобный способ развертывания:
 
 <Tabs>
 <TabItem label="Автоматическая установка" icon="rocket">
-    {/* Мы убрали заголовок "Как запустить" и сразу даем выбор ОС */}
     
     <Aside type="tip" title="Запуск скрипта">
       Выберите вашу операционную систему ниже, чтобы увидеть команды для терминала:
@@ -41,24 +40,24 @@ import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/comp
   
   <TabItem label="Ручная установка" icon="setting">
     <Steps>
-    1.  ### Скачивание исходников
+    1.  ### Склонируйте репозиторий на сервер
         ```bash
         git clone https://git.myslivets.com/myslivets/lunastore
         cd lunastore
         ```
 
-    2.  ### Установка зависимостей
+    2.  ### Установите зависимости из файла в репозитории
         ```bash
         pip install -r requirements.txt
         ```
 
-    3.  ### Настройка окружения
+    3.  ### Настройте первоначальное окружение вашего будущего LunaStore-сервера
         ```bash
         cp .env.example .env
         ```
         *(Отредактируйте .env, заполнив параметры БД и OpenID)*
 
-    4.  ### Подготовка базы данных
+    4.  ### Сделайте первичную подготовку базы данных
         <Tabs>
           <TabItem label="Production">
             ```bash
@@ -74,12 +73,12 @@ import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/comp
           </TabItem>
         </Tabs>
 
-    5.  ### Создание администратора
+    5.  ### Создайте свой первый аккаунт (обязательно с правами администратора)
         ```bash
         make superuser
         ```
 
-    6.  ### Запуск проекта
+    6.  ### Соберите воедино и наслаждайтесь
         ```bash
         make build
         make up

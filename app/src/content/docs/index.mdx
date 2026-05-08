@@ -1,19 +1,19 @@
 ---
 title: LunaStore
-description: Магазин приложений для старых операционных систем (Windows XP и других)
+description: Документация по использованию API LunaStore и конфигурации клиентов
 tableOfContents: false
 hero:
   title: |
     Документация LunaStore
-  tagline: Ретро-магазин приложений для старых операционных систем, в первую очередь Windows XP. Быстрый, оптимизированный и совместимый даже с Internet Explorer 6.
+  tagline: Переосмысление каталога Windows из эпохи XP/7 с добавлением собственных функций. Сайт-справочник по поиску ПО для старого ПК (другими словами - "репоизторий") с полной поддержкой Internet Explorer 6.
   image:
     file: ../../assets/logo.svg
   actions:
-    - text: Руководство по установке
+    - text: Хочу свой LunaStore!
       link: /getting-started/installation/
       icon: right-arrow
       variant: primary
-    - text: Документация API
+    - text: Использование API
       link: /api/
       icon: document
       variant: secondary
@@ -23,17 +23,17 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid>
-    <Card title="Ретро-эстетика" icon="star">
-        Создан специально для ценителей ретро-эстетики. Удобный поиск и скачивание программ для старых операционных систем, в первую очередь **Windows XP**.
+    <Card title="Лёгкий дизайн" icon="star">
+        Дизайн разработан с учётом его работы на **Internet Explorer 6 и Windows XP**. Никаких анимаций и современных CSS-решений. Эстетика и кайф!
     </Card>
     <Card title="Современный стек" icon="rocket">
-        Высокая скорость работы благодаря **Django** (Python) и нашему движку **LunaSpire** (на Go) для CDN, уведомлений и прочего.
+        Сайт пархает благодаря **Django** (Python) и нашему движку **LunaSpire** (Go) для CDN, что (по нашему решению) хорошо скажется на производительности при высоких нагрузках. Надеемся.
     </Card>
     <Card title="Надежная инфраструктура" icon="setting">
-        База данных **PostgreSQL 18** и полная контейнеризация с использованием **Docker** и **Docker Compose** для простого и удобного развертывания.
+        База данных выстроена с помощью **PostgreSQL 18** и полной контейнеризации с использованием **Docker** и **Docker Compose**.
     </Card>
-    <Card title="Легкий в использовании" icon="puzzle">
-        Доступна встроенная поддержка аутентификации через **OpenID (OIDC)**, а также подробное описание [методов API](/docs/api-documentation/) для интеграций, а процесс развертывания собственного инстанса максимально легкий.
+    <Card title="Открытость" icon="puzzle">
+        Доступна встроенная поддержка аутентификации через **OpenID (OIDC)**, а также подробное описание [методов API](/docs/api-documentation/) для интеграций с пошаговым процессом развертывания собственного инстанса (если Вам не нравится стандартный, лол)
     </Card>
 </CardGrid>
 
