@@ -14,6 +14,10 @@ import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/comp
   - **Установленное ПО:** Docker, Docker Compose, Python 3.12+, PIP
 </Aside>
 
+<Aside type="danger" title="Важное предупреждение">
+  Мы не гарантируем, что **production-версия** проекта вообще заработает. На данный момент мы **не оказываем поддержку** относительно production-версии — поддержка предоставляется только для **development-окружения**. Если вы хотите развернуть проект в production-окружении, делайте это на свой страх и риск.
+</Aside>
+
 Выберите удобный способ развертывания:
 
 <Tabs>
@@ -74,15 +78,34 @@ import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/comp
         </Tabs>
 
     5.  ### Создайте свой первый аккаунт (обязательно с правами администратора)
-        ```bash
-        make superuser
-        ```
+        <Tabs>
+          <TabItem label="Production">
+            ```bash
+            make superuser
+            ```
+          </TabItem>
+          <TabItem label="Development">
+            ```bash
+            make dev-superuser
+            ```
+          </TabItem>
+        </Tabs>
 
     6.  ### Соберите воедино и наслаждайтесь
-        ```bash
-        make build
-        make up
-        ```
+        <Tabs>
+          <TabItem label="Production">
+            ```bash
+            make build
+            make up
+            ```
+          </TabItem>
+          <TabItem label="Development">
+            ```bash
+            make dev-build
+            make dev-up
+            ```
+          </TabItem>
+        </Tabs>
     </Steps>
   </TabItem>
 </Tabs>
