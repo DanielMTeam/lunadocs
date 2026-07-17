@@ -1,0 +1,172 @@
+---
+title: execute
+description: Пакетный метод выполнения запросов. Позволяет вызвать сразу несколько методов API за один HTTP-запрос.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="POST" variant="success" size="medium" /> `/method/v2/execute/`
+
+Метод позволяет за один сетевой запрос выполнить пакет из нескольких различных обращений к API, тем самым снижая сетевую задержку.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры тела запроса (JSON Body)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `code` | `array` | **Да** | Массив объектов с описанием запросов |
+
+#### Структура объекта запроса внутри `code`
+
+| Поле | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `method` | `string` | **Да** | Имя метода, например: `user.retrieve` или `marketplace.search` |
+| `params` | `object` | Нет | Параметры для передачи в метод |
+
+#### Доступные методы `method`
+
+| Название метода | Описание | Зачем использовать? |
+| :--- | :--- | :--- |
+| `user.list` | Получение списка всех пользователей | Для админки или списков |
+| `user.retrieve` | Получить инфу об одном пользователе (`pk`) | Профиль пользователя |
+| `marketplace.list` | Список всех приложений в магазине | Главная страница или лента |
+| `marketplace.retrieve` | Детали одного приложения (`pk`) | Страница приложения |
+| `marketplace.search` | Поиск приложений (`query`) | Строка поиска |
+| `category.list` | Список всех категорий | Боковое меню или фильтры |
+| `category.retrieve` | Детали категории (`pk`) | Заголовок страницы категории |
+| `category.apps` | Приложения внутри конкретной категории (`pk`) | Просмотр раздела (например, "Игры") |
+| `distribution.list` | Список всех сборок/дистрибутивов вообще | Техническая статистика |
+| `distribution.retrieve` | Детали одной сборки (`pk`) | Перед скачиванием |
+| `distribution.by_app` | Сборки конкретного приложения (`app_id`) | Вкладка "Версии" на странице приложения |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Примеры запросов
+
+Ниже приведены популярные сценарии использования `execute`:
+
+#### 1. Сборка главной страницы магазина
+Можно получить список категорий и сразу несколько приложений для витрины за один запрос.
+
+```json
+{
+  "code": [
+    {"method": "category.list", "params": {"limit": 10}},
+    {"method": "marketplace.list", "params": {"limit": 20, "offset": 0}}
+  ]
+}
+```
+
+#### 2. Загрузка страницы приложения
+Когда пользователь открывает страницу приложения, можно одним запросом получить инфу о приложении и список доступных сборок (дистрибутивов).
+
+```json
+{
+  "code": [
+    {"method": "marketplace.retrieve", "params": {"pk": 42}},
+    {"method": "distribution.by_app", "params": {"app_id": 42}}
+  ]
+}
+```
+
+#### 3. Поиск с пагинацией
+Поиск приложений по запросу "mario" со смещением (для второй страницы результатов).
+
+```json
+{
+  "code": [
+    {"method": "marketplace.search", "params": {"query": "mario", "limit": 10, "offset": 10}}
+  ]
+}
+```
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'POST' \
+      'https://api.lunastore.app/method/v2/execute/' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "code": [
+          {"method": "marketplace.retrieve", "params": {"pk": 42}},
+          {"method": "distribution.by_app", "params": {"app_id": 42}}
+        ]
+      }'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    payload = {
+        "code": [
+            {"method": "marketplace.retrieve", "params": {"pk": 42}},
+            {"method": "distribution.by_app", "params": {"app_id": 42}}
+        ]
+    }
+
+    response = requests.post('https://api.lunastore.app/method/v2/execute/', json=payload)
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+Возвращается массив объектов с результатами каждого вызванного метода в том порядке, в котором они были переданы:
+
+```json 
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "is_active": true,
+    "avatar_url": "/staticfiles/img/noavatar_64.jpg",
+    "type": "Admin"
+  },
+  {
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+      {
+        "id": 3,
+        "title": "New Test App",
+        "description": "wow",
+        "price": 0,
+        "screenshot_urls": [],
+        "is_demo": false
+      }
+    ]
+  }
+]
+```

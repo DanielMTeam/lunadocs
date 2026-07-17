@@ -52,9 +52,34 @@ export default defineConfig({
                     ],
                 },
                 {
-                    label: "API",
+                    label: "V2 API (Актуальное)",
                     items: [
                         { label: "Введение", slug: "api" },
+                        {
+                            label: "Пакетные запросы",
+                            items: [
+                                {
+                                    label: "execute",
+                                    slug: "api/execute",
+                                    badge: { text: "POST", variant: "success" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Категории",
+                            items: [
+                                {
+                                    label: "category",
+                                    slug: "api/category/list",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    label: "V1 API (Устаревшее)",
+                    items: [
                         {
                             label: "Приложения",
                             items: [

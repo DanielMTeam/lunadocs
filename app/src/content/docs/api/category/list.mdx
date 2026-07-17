@@ -1,0 +1,92 @@
+---
+title: category
+description: Метод позволяет получить список всех категорий в инстансе.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/category/`
+
+Метод позволяет получить список всех категорий приложений в системе.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
+| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/category/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/category/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+При успешном запросе возвращается список категорий с поддержкой пагинации:
+
+```json 
+{
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "name": "Инструменты",
+      "description": "Лучшие инструменты"
+    },
+    {
+      "id": 2,
+      "name": "Утилиты",
+      "description": "Полезные программы"
+    }
+  ]
+}
+```

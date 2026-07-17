@@ -30,13 +30,17 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/getAppInfo`
+# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/getAppInfo/`
 
-Метод позволяет получить полную информацию о приложении, включая его описание, версию, системные требования и прочее.
+<Aside type="caution" title="Устаревший метод (V1)">
+Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/marketplace/getAppInfo/`), однако мы рекомендуем использовать актуальные методы V2 (например, `marketplace.retrieve` через `execute`).
+</Aside>
+
+Метод позволяет получить подробную информацию о приложении по его уникальному идентификатору (ID).
 
 ---
 
-### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры пути (Path)
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
@@ -47,10 +51,10 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 ### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
 
 <Tabs>
-  <TabItem label="cURL" icon="terminal">
+    <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/marketplace/getAppInfo?app_id=123' \
+      'https://api.lunastore.app/method/marketplace/getAppInfo/?id=123' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -58,17 +62,13 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     ```python
     import requests
 
-    params = {
-        'app_id': 123
-    }
-
-    response = requests.get('https://api.lunastore.app/method/marketplace/getAppInfo', params=params)
+    response = requests.get('https://api.lunastore.app/method/marketplace/getAppInfo/?id=123')
     print(response.json())
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/marketplace/getAppInfo?app_id=123")
+    resp, err := http.Get("https://api.lunastore.app/method/marketplace/getAppInfo/?id=123")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -82,7 +82,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/marketplace/getAppInfo?app_id=123";
+            var url = "https://api.lunastore.app/method/marketplace/getAppInfo/?id=123";
             
             try
             {
@@ -113,7 +113,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/marketplace/getAppInfo?app_id=123");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/marketplace/getAppInfo/?id=123");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 

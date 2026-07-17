@@ -30,7 +30,11 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/distribution/getDistributionsList`
+# <Badge text="GET" variant="note" size="medium" /> `/method/distribution/getDistributionsList/`
+
+<Aside type="caution" title="Устаревший метод (V1)">
+Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/distribution/getDistributionsList/`), однако мы рекомендуем использовать актуальные методы V2 (например, `distribution.by_app` через `execute` или напрямую по V2 пути).
+</Aside>
 
 Метод позволяет получить список версий (т.е. дистрибуций), загруженных для определенной программы.
 
@@ -40,17 +44,19 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
-| `id` | `integer` | **Да** | ID приложения |
+| `app_id` | `integer` | **Да** | ID приложения |
+| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
+| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
 
 ---
 
 ### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
 
 <Tabs>
-  <TabItem label="cURL" icon="terminal">
+    <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/distribution/getDistributionsList?id=1' \
+      'https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -59,16 +65,16 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     import requests
 
     params = {
-        'id': 1,
+        'app_id': 1,
     }
 
-    response = requests.get('https://api.lunastore.app/method/distribution/getDistributionsList', params=params)
+    response = requests.get('https://api.lunastore.app/method/distribution/getDistributionsList/', params=params)
     print(response.json())
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/distribution/getDistributionsList?id=1")
+    resp, err := http.Get("https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -82,7 +88,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/distribution/getDistributionsList?id=1";
+            var url = "https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1";
             
             try
             {
@@ -113,7 +119,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/distribution/getDistributionsList?id=1");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
@@ -139,22 +145,28 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ```json 
 {
-  "1": {
-    "id": 2, // id of distibution
-    "app": 1, // id of app 
-    "version": "v1.0.0",
-    "link": "/get_dist_file/2/",
-    "url": "",
-    "has_download": true,
-    "published": "2026-04-19T10:22:10.106166Z"
-  },
-  "2": {
-    "id": 3,
-    "app": 1,
-    "version": "v.1.2",
-    "link": "/get_dist_file/3/",
-    "url": "",
-    "has_download": true,
-    "published": "2026-04-19T11:13:00.005804Z"
-  }
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 2, // id of distibution
+      "app": 1, // id of app 
+      "version": "v1.0.0",
+      "link": "/get_dist_file/2/",
+      "url": "",
+      "has_download": true,
+      "published": "2026-04-19T10:22:10.106166Z"
+    },
+    {
+      "id": 3,
+      "app": 1,
+      "version": "v.1.2",
+      "link": "/get_dist_file/3/",
+      "url": "",
+      "has_download": true,
+      "published": "2026-04-19T11:13:00.005804Z"
+    }
+  ]
 }
+```

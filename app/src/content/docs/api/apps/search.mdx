@@ -30,7 +30,11 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/search`
+# <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/search/`
+
+<Aside type="caution" title="Устаревший метод (V1)">
+Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/marketplace/search/`), однако мы рекомендуем использовать актуальные методы V2 (например, через `execute`).
+</Aside>
 
 Метод позволяет выполнить поиск приложений, исходя из текстового запроса.
 
@@ -41,16 +45,18 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Да** | Текстовый запрос ^_^ |
+| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
+| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
 
 ---
 
 ### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
 
 <Tabs>
-  <TabItem label="cURL" icon="terminal">
+    <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/search?query=lorem_impus' \
+      'https://api.lunastore.app/method/marketplace/search/?query=lorem_impus' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -62,13 +68,13 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         'query': 'lorem_impus',
     }
 
-    response = requests.get('https://api.lunastore.app/method/marketplace/search', params=params)
+    response = requests.get('https://api.lunastore.app/method/marketplace/search/', params=params)
     print(response.json())
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/marketplace/search?query=lorem_impus")
+    resp, err := http.Get("https://api.lunastore.app/method/marketplace/search/?query=lorem_impus")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -82,7 +88,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/marketplace/search?query=lorem_impus";
+            var url = "https://api.lunastore.app/method/marketplace/search/?query=lorem_impus";
             
             try
             {
@@ -113,7 +119,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/marketplace/search?query=123");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/marketplace/search/?query=lorem_impus");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
@@ -139,20 +145,26 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ```json 
 {
-  "1": {
-    "id": 3,
-    "title": "New Test App",
-    "description": "wow, there is a description",
-    "original_author": "unknown",
-    "slogan": "lmao",
-    "price": 0,
-    "requirements": "computer, keyboard and mouse",
-    "screenshot_urls": [
-      "//192.168.48.128:8080/public/48/7b/487b098fd79b05c04df6f48fdba21c52dec936f03197a0b89e7bea3ae5b65bf3.jfif"
-    ],
-    "developer_site": "https://fayzetw.in",
-    "is_demo": false,
-    "is_under_dmca": false,
-    "icon_url": "//192.168.48.128:8080/public/6e/1b/6e1b1b8005bd9c7ccc9c7b8da2b5470eba2ea5eca6464864d420cdf2739f15e4.jfif"
-  }
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 3,
+      "title": "New Test App",
+      "description": "wow, there is a description",
+      "original_author": "unknown",
+      "slogan": "lmao",
+      "price": 0,
+      "requirements": "computer, keyboard and mouse",
+      "screenshot_urls": [
+        "//192.168.48.128:8080/public/48/7b/487b098fd79b05c04df6f48fdba21c52dec936f03197a0b89e7bea3ae5b65bf3.jfif"
+      ],
+      "developer_site": "https://fayzetw.in",
+      "is_demo": false,
+      "is_under_dmca": false,
+      "icon_url": "//192.168.48.128:8080/public/6e/1b/6e1b1b8005bd9c7ccc9c7b8da2b5470eba2ea5eca6464864d420cdf2739f15e4.jfif"
+    }
+  ]
 }
+```

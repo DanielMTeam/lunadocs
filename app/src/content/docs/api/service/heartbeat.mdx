@@ -30,7 +30,11 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/service/heartbeat`
+# <Badge text="GET" variant="note" size="medium" /> `/method/service/heartbeat/`
+
+<Aside type="caution" title="Устаревший метод (V1)">
+Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/service/heartbeat/`), однако мы рекомендуем использовать актуальные методы V2.
+</Aside>
 
 Метод позволяет проверить работоспособность инстанса LunaStore.
 
@@ -42,7 +46,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
   <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/service/heartbeat' \
+      'https://api.lunastore.app/method/service/heartbeat/' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -50,13 +54,13 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     ```python
     import requests
 
-    response = requests.get('https://api.lunastore.app/method/service/heartbeat')
+    response = requests.get('https://api.lunastore.app/method/service/heartbeat/')
     print(response.json())
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/service/heartbeat")
+    resp, err := http.Get("https://api.lunastore.app/method/service/heartbeat/")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -70,7 +74,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/service/heartbeat";
+            var url = "https://api.lunastore.app/method/service/heartbeat/";
             
             try
             {
@@ -101,7 +105,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/service/heartbeat");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/service/heartbeat/");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 

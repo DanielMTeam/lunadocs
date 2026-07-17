@@ -5,13 +5,14 @@ description: Основная информация по работе с LunaStor
 
 import { Aside, Steps, Tabs, TabItem, Badge, Icon } from '@astrojs/starlight/components';
 
-API LunaStore построено по принципу **RESTful** и позволяет полностью автоматизировать взаимодействие с инстансом
+API LunaStore построено по принципу **RESTful** и позволяет полностью автоматизировать взаимодействие с инстансом. С переходом на V2 API (доступно по пути `/method/v2/`) была добавлена поддержка JWT токенов, пакетных (батч) запросов, а также улучшенная пагинация.
 
 ### <Icon name="setting" color="var(--sl-color-accent)" /> Общая информация
 
 - **Формат данных:** JSON (`application/json`)
 - **Базовый порт (Docker):** `7088`
 - **Кодировка:** UTF-8
+- **Пагинация (V2):** Во всех списках (коллекциях) используется `LimitOffsetPagination`. Для управления выдачей передавайте параметры `limit` (максимум элементов) и `offset` (сдвиг).
 
 ---
 
@@ -25,6 +26,7 @@ API LunaStore построено по принципу **RESTful** и позво
 | <Badge text="1xxx" variant="danger" /> | Ошибки пользователей (User) |
 | <Badge text="2xxx" variant="caution" /> | Ошибки приложений (Application) |
 | <Badge text="3xxx" variant="tip" /> | Ошибки категорий (Category) |
+| <Badge text="4xxx" variant="note" /> | Ошибки авторизации и роутинга (Auth / System) |
 
 #### Подробный справочник кодов
 
@@ -39,10 +41,82 @@ API LunaStore построено по принципу **RESTful** и позво
 | `2000` | `APPLICATION_NOT_FOUND` | Данное приложение не существует |
 | `2001` | `APPLICATION_IS_UNDER_DMCA` | Данное приложение находится под блокировкой из-за DMCA страйка |
 | `3000` | `CATEGORY_NOT_FOUND` | Данная категория не найдена |
+| `4000` | `TWO_FACTOR_REQUIRED` | Требуется двухфакторная аутентификация (передайте `totp_code`) |
+| `4001` | `TWO_FACTOR_INVALID` | Неверный код двухфакторной аутентификации |
+| `4005` | `METHOD_NOT_FOUND` | Запрошенный метод не существует в пакетном запросе (в `execute`) |
 
 ---
 
-### <Icon name="rocket" color="var(--sl-color-accent)" /> Первый запрос
+### <Icon name="shield" color="var(--sl-color-accent)" /> Авторизация (JWT)
+
+В V2 API используется современная JWT-авторизация. Для выполнения запросов от лица пользователя необходимо получить `access` токен.
+
+#### 1. Получение токена
+Отправьте `POST` запрос на `/method/v2/auth/token/`, передав `username` и `password`. 
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'POST' \
+      'https://api.lunastore.app/method/v2/auth/token/' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "username": "your_login",
+        "password": "your_password"
+      }'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    payload = {"username": "your_login", "password": "your_password"}
+    response = requests.post('https://api.lunastore.app/method/v2/auth/token/', json=payload)
+    print(response.json()) # {"access": "...", "refresh": "..."}
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="Двухфакторная аутентификация (2FA)">
+Если у пользователя включена двухфакторная защита, API вернет ошибку `4000 (TWO_FACTOR_REQUIRED)`. В этом случае повторите запрос, добавив поле `"totp_code": "123456"`.
+</Aside>
+
+#### 2. Использование токена
+Для доступа к защищенным методам передавайте полученный `access` токен в HTTP-заголовке `Authorization`:
+```http
+Authorization: Bearer <твой_access_токен>
+```
+
+#### 3. Обновление токена (Refresh)
+Время жизни `access` токена ограничено. Когда он истечет, API начнет возвращать статус `401 Unauthorized`. Чтобы не запрашивать пароль у пользователя заново, используйте `refresh` токен.
+
+Отправьте `POST` запрос на `/method/v2/auth/token/refresh/`:
+```json
+{
+  "refresh": "<твой_refresh_токен>"
+}
+```
+В ответ вы получите новый свежий `access` токен.
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пакетные запросы (Execute)
+
+В V2 API появился VK-подобный метод `execute` для выполнения нескольких методов за один HTTP запрос. 
+Отправьте POST-запрос на `/method/v2/execute/` с JSON:
+
+```json
+{
+  "code": [
+    {"method": "user.retrieve", "params": {"pk": 1}},
+    {"method": "marketplace.search", "params": {"query": "test", "limit": 2}}
+  ]
+}
+```
+
+---
+
+### <Icon name="laptop" color="var(--sl-color-accent)" /> Первый запрос
 
 Попробуйте отправить проверочный запрос (Heartbeat), чтобы убедиться, что инстанс отвечает корректно.
 
@@ -50,14 +124,14 @@ API LunaStore построено по принципу **RESTful** и позво
   <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/service/heartbeat/' \
+      'https://api.lunastore.app/method/v2/service/heartbeat/' \
       -H 'accept: application/json'
     ```
   </TabItem>
   <TabItem label="Python" icon="seti:python">
     ```python
     import requests
-    response = requests.get('https://api.lunastore.app/method/service/heartbeat/')
+    response = requests.get('https://api.lunastore.app/method/v2/service/heartbeat/')
     print(response.json())
     ```
   </TabItem>
@@ -70,3 +144,4 @@ API LunaStore построено по принципу **RESTful** и позво
   "timestamp": "2026-02-03T07:33:25.768663",
   "version": "2.0"
 }
+```
