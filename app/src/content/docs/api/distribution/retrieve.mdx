@@ -1,0 +1,82 @@
+---
+title: retrieve
+description: Детали одной сборки (дистрибутива) по ID.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/distribution/{id}/`
+
+Карточка одной сборки: версия, ссылка на файл, дата публикации и описание релиза.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Path)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | ID дистрибутива |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/distribution/4760/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/distribution/4760/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "id": 4760,
+  "app": 403,
+  "version": "1.0",
+  "link": "/get_dist_file/4760/",
+  "url": "",
+  "has_download": true,
+  "published": "2026-08-03T17:48:54.908257Z",
+  "release_description": null
+}
+```

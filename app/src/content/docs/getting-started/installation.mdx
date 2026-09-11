@@ -7,123 +7,171 @@ tableOfContents: false
 import { Aside, Steps, Tabs, TabItem, Card, Icon } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="Системные требования">
-  Перед тем, как начать процесс установки на сервер, убедитесь, что он соответствует минимальным характеристикам LunaStore:
+  Перед установкой убедитесь, что сервер тянет минимум:
   - **Процессор:** 2 ядра и более
   - **ОЗУ:** 4 ГБ и более
   - **Диск:** 20+ ГБ свободного места
-  - **Установленное ПО:** Docker, Docker Compose, Python 3.12+, PIP
+  - **ПО:** Docker и Docker Compose (plugin `docker compose` или классический `docker-compose`)
+</Aside>
+
+<Aside type="note" title="Стек">
+  LunaStore крутится в Docker: Django (web / admin / API), PostgreSQL 18, Redis, Meilisearch, опциональный **ClickHouse** (analytics) и [LunaSpire](https://github.com/DanielMTeam/lunaspire) (CDN/медиа). Исходники: [DanielMTeam/lunastore](https://github.com/DanielMTeam/lunastore).
 </Aside>
 
 <Aside type="danger" title="Важное предупреждение">
-  Мы не гарантируем, что **production-версия** проекта вообще заработает. На данный момент мы **не оказываем поддержку** относительно production-версии — поддержка предоставляется только для **development-окружения**. Если вы хотите развернуть проект в production-окружении, делайте это на свой страх и риск.
+  Официально мы поддерживаем **development**-развёртывание. **Production / self-hosting** можно поднять через `setup.sh prod` и `docker-compose.selfhost.yml`, но гарантий "встанет с первого раза на любом сервере" нет - делайте на свой страх и риск и обязательно ставьте reverse proxy.
 </Aside>
 
 Выберите удобный способ развертывания:
 
 <Tabs>
-<TabItem label="Автоматическая установка" icon="rocket">
-    
-    <Aside type="tip" title="Запуск скрипта">
-      Выберите вашу операционную систему ниже, чтобы увидеть команды для терминала:
-    </Aside>
+  <TabItem label="Автоматическая установка" icon="rocket">
+    Склонируйте репозиторий **вместе с submodule LunaSpire**, затем запустите интерактивный мастер:
+
+    ```bash
+    git clone --recurse-submodules https://github.com/DanielMTeam/lunastore
+    cd lunastore
+    ```
 
     <Tabs>
       <TabItem label="Linux (.sh)">
         ```bash
-        chmod +x setup.sh && ./setup.sh
+        chmod +x setup.sh
+        ./setup.sh
         ```
-        *Используйте `bash setup.sh`, если нет прав на выполнение.*
+
+        Или сразу без мастера:
+
+        ```bash
+        ./setup.sh dev    # локальная разработка (Debug=True)
+        ./setup.sh prod   # self-hosting (Debug=False, пароли генерируются)
+        ```
+
+        *Если нет прав на выполнение: `bash setup.sh`.*
       </TabItem>
       <TabItem label="Windows (.ps1)">
         ```powershell
-        .\setup.ps1
+        .\setup.ps1 dev
         ```
+
+        Скрипт поднимет `docker-compose.dev.yml`, прогонит migrate / collectstatic / createcachetable и предложит создать superuser.
       </TabItem>
     </Tabs>
+
+    <Aside type="tip" title="Что делает мастер">
+      - проверяет Docker / Docker Compose
+      - создаёт `.env` из `.env.example` (в prod ещё генерит секреты и спрашивает домен)
+      - поднимает контейнеры (`docker-compose.dev.yml` или `docker-compose.selfhost.yml`)
+      - в dev: migrate, collectstatic, createcachetable
+      - опционально создаёт суперпользователя
+    </Aside>
   </TabItem>
-  
+
   <TabItem label="Ручная установка" icon="setting">
     <Steps>
-    1.  ### Склонируйте репозиторий на сервер
+    1.  ### Склонируйте репозиторий
         ```bash
-        git clone https://github.com/DanielMTeam/lunastore
+        git clone --recurse-submodules https://github.com/DanielMTeam/lunastore
         cd lunastore
         ```
 
-    2.  ### Установите зависимости из файла в репозитории
+        Если submodule уже забыли:
         ```bash
-        pip install -r requirements.txt
+        git submodule update --init --recursive
         ```
 
-    3.  ### Настройте первоначальное окружение вашего будущего LunaStore-сервера
+    2.  ### Подготовьте `.env`
         ```bash
         cp .env.example .env
         ```
-        *(Отредактируйте .env, заполнив параметры БД и OpenID)*
+        Заполните как минимум БД, `SECRET_KEY`, `LUNASPIRE_*`, `ALLOWED_HOSTS`, CORS/CSRF и `MEILI_MASTER_KEY`. Подробности - в [Конфигурации](/getting-started/configuration/).
 
-    4.  ### Сделайте первичную подготовку базы данных
+    3.  ### Соберите и поднимите контейнеры
         <Tabs>
-          <TabItem label="Production">
-            ```bash
-            make migrate
-            make cachetable
-            ```
-          </TabItem>
-          <TabItem label="Development">
-            ```bash
-            make dev-migrate
-            make dev-cachetable
-            ```
-          </TabItem>
-        </Tabs>
-
-    5.  ### Создайте свой первый аккаунт (обязательно с правами администратора)
-        <Tabs>
-          <TabItem label="Production">
-            ```bash
-            make superuser
-            ```
-          </TabItem>
-          <TabItem label="Development">
-            ```bash
-            make dev-superuser
-            ```
-          </TabItem>
-        </Tabs>
-
-    6.  ### Соберите воедино и наслаждайтесь
-        <Tabs>
-          <TabItem label="Production">
-            ```bash
-            make build
-            make up
-            ```
-          </TabItem>
           <TabItem label="Development">
             ```bash
             make dev-build
             make dev-up
             ```
+            Compose-файл: `docker-compose.dev.yml`.
+          </TabItem>
+          <TabItem label="Production (self-host)">
+            ```bash
+            make build
+            make up
+            ```
+            Compose-файл: `docker-compose.selfhost.yml`. При старте контейнер сам сделает `migrate`, `collectstatic` и `createcachetable`.
           </TabItem>
         </Tabs>
+
+    4.  ### Миграции и кэш (нужно в основном для Development)
+        <Tabs>
+          <TabItem label="Development">
+            ```bash
+            make dev-migrate
+            make dev-cachetable
+            make dev-collectstatic
+            ```
+          </TabItem>
+          <TabItem label="Production (self-host)">
+            Обычно уже выполнено при `make up`. Если нужно вручную:
+            ```bash
+            make migrate
+            make cachetable
+            make collectstatic
+            ```
+          </TabItem>
+        </Tabs>
+
+    5.  ### Создайте администратора
+        <Tabs>
+          <TabItem label="Development">
+            ```bash
+            make dev-superuser
+            ```
+          </TabItem>
+          <TabItem label="Production (self-host)">
+            ```bash
+            make superuser
+            ```
+          </TabItem>
+        </Tabs>
+
+    6.  ### (Опционально) Переиндексируйте поиск
+        После первого наполнения каталога:
+        ```bash
+        make dev-reindex-search
+        ```
+        (в production: `docker compose -f docker-compose.selfhost.yml exec lunastore python manage.py reindex_search`)
     </Steps>
   </TabItem>
 </Tabs>
 
 ---
 
-## <Icon name="information" color="var(--sl-color-accent)" /> Архитектура и порты
+## <Icon name="information" color="var(--sl-color-accent)" /> Сервисы и порты
 
-LunaStore распределен по трем основным контейнерам. Убедитесь, что данные порты открыты в вашем фаерволе:
+После успешного старта (dev или self-host) снаружи обычно торчат:
 
-| Контейнер | Назначение | Порт |
+| Сервис | Назначение | Порт |
 | :--- | :--- | :--- |
-| **lunaStore** | Основной сайт и контент | `9088` |
-| **lunaStoreAdmin** | Панель управления | `8088` |
-| **lunaStoreAPI** | Функционал API | `7088` |
+| **web** | Основной сайт | `9088` |
+| **admin** | Панель управления | `8088` |
+| **api** | LunaStore API | `7088` |
+| **lunaspire** | Медиа / CDN-движок | `6080` |
+| **clickhouse** | Аналитика (опционально, profile `analytics`) | `8123` / `9000` (dev) |
+
+В development дополнительно пробрасываются PostgreSQL (`5432`), Redis (`6379`) и Meilisearch (`7700`). ClickHouse **не** стартует вместе с основным стеком - только с профилем Compose `analytics`:
+
+```bash
+make dev-analytics-up      # development
+make analytics-up          # production / self-host
+```
+
+После старта включите `ANALYTICS_ENABLED=True` в `.env` и прогоните миграции аналитики (`make dev-analytics-migrate` / `make analytics-migrate`). Подробности переменных - в [Конфигурации](/getting-started/configuration/).
 
 <Aside type="note">
-  Если вам нужно изменить порты, отредактируйте файл `docker-compose.yml` перед запуском команды `make build`.
+  В production поставьте reverse proxy (Caddy / Nginx / Apache) на домен и проксируйте трафик на эти порты. Менять маппинг портов можно в `docker-compose.dev.yml` или `docker-compose.selfhost.yml` до `make build` / `make up`.
 </Aside>
 
 <div style="margin-top: 3rem; text-align: center;">

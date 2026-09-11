@@ -1,6 +1,6 @@
 ---
 title: list
-description: Метод позволяет получить список всех категорий в инстансе.
+description: Глобальный список всех дистрибутивов в инстансе.
 ---
 
 import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
@@ -30,9 +30,9 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/v2/category/`
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/distribution/`
 
-Метод позволяет получить список всех категорий приложений в системе.
+Список всех сборок вообще. Для страницы приложения обычно достаточно [`by_app`](/api/distribution/by_app/).
 
 ---
 
@@ -41,7 +41,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
 | `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
-| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
 
 ---
 
@@ -51,7 +51,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
   <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/v2/category/' \
+      'https://api.lunastore.app/method/v2/distribution/?limit=1' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -59,7 +59,10 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     ```python
     import requests
 
-    response = requests.get('https://api.lunastore.app/method/v2/category/')
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/distribution/',
+        params={'limit': 1},
+    )
     print(response.json())
     ```
   </TabItem>
@@ -69,23 +72,21 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
 
-При успешном запросе возвращается список категорий с поддержкой пагинации:
-
-```json 
+```json
 {
-  "count": 2,
-  "next": null,
+  "count": 812,
+  "next": "http://api.lunastore.app/method/v2/distribution/?limit=1&offset=1",
   "previous": null,
   "results": [
     {
-      "id": 1,
-      "name": "Инструменты",
-      "description": "Лучшие инструменты"
-    },
-    {
-      "id": 2,
-      "name": "Утилиты",
-      "description": "Полезные программы"
+      "id": 4783,
+      "app": 415,
+      "version": "4.0",
+      "link": "/get_dist_file/4783/",
+      "url": null,
+      "has_download": true,
+      "published": "2026-08-05T21:26:41.931255Z",
+      "release_description": null
     }
   ]
 }

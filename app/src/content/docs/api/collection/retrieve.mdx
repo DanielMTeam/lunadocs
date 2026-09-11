@@ -1,0 +1,102 @@
+---
+title: retrieve
+description: Подробная информация о конкретной коллекции.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/collection/{id}/`
+
+Получить карточку одной коллекции: название, описание, владелец, флаги и мозаика иконок.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Path)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | ID коллекции |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/collection/37/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/collection/37/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "id": 37,
+  "title": "Windows XP - Основные программы",
+  "description": "Базовый набор программ, дополнений и тем из эпохи Windows XP.",
+  "owner": {
+    "id": 347,
+    "username": "dexoff",
+    "telegram": "dexofluna",
+    "discord": "dexoffc",
+    "description": "щащаща :3",
+    "website": "https://tiktok.com/@https_dexoff",
+    "openvk": "нету",
+    "avatar_url": "//spire.lunastore.app/public/8d/01/8d01c7804546c909302ba6ba0a8233495398aa6f3fa8800264252b4860711737.png"
+  },
+  "is_system": false,
+  "is_public": true,
+  "created_at": "2026-09-06T16:52:47.947404Z",
+  "updated_at": "2026-09-11T15:39:09.839826Z",
+  "items_count": 17,
+  "mosaic_icons": [
+    "//spire.lunastore.app/public/12/37/1237df44502c1142662c1967f9a88c141a51dbe22dd0d042655e4e47673fa211.png",
+    "//spire.lunastore.app/public/d1/a3/d1a3286157334b6dd645097ed2e5c96d2a2444272fd352c600ca701fcbbc9918.png",
+    "//spire.lunastore.app/public/69/8d/698d80a249cf430f6404b8c9b39ce9f705c350709dea11ba05964220e93a3a16.png",
+    "//spire.lunastore.app/public/e7/c1/e7c1264192c73d9a425737effd7c1aee8bd64ffa70883a25558814bf496d9358.png"
+  ]
+}
+```
+
+<Aside type="note" title="Системные коллекции">
+Флаг `is_system: true` означает системную коллекцию (например, "Понравившиеся"). У владельца такая коллекция максимум одна.
+</Aside>

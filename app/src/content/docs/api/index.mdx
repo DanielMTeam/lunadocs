@@ -13,6 +13,9 @@ API LunaStore построено по принципу **RESTful** и позво
 - **Базовый порт (Docker):** `7088`
 - **Кодировка:** UTF-8
 - **Пагинация (V2):** Во всех списках (коллекциях) используется `LimitOffsetPagination`. Для управления выдачей передавайте параметры `limit` (максимум элементов) и `offset` (сдвиг).
+- **Поиск (V2):** Полнотекстовый поиск приложений и пользователей построен на Meilisearch (`/method/v2/marketplace/search/`, `/method/v2/user/search/`), плюс typeahead через `/method/v2/search/suggest/`.
+- **Каталог (V2):** Приложения - `/method/v2/marketplace/`, категории - `/method/v2/category/`, дистрибутивы - `/method/v2/distribution/`, пользователи - `/method/v2/user/`.
+- **Коллекции (V2):** Публичные подборки приложений доступны по `/method/v2/collection/` (список, детали, приложения внутри, коллекции пользователя).
 
 ---
 
@@ -98,6 +101,9 @@ Authorization: Bearer <твой_access_токен>
 ```
 В ответ вы получите новый свежий `access` токен.
 
+#### 4. Отзыв токена (Revoke)
+Чтобы разлогинить сессию, отправьте `POST` на `/method/v2/auth/token/revoke/` с телом `{"refresh": "<твой_refresh_токен>"}` - refresh попадёт в blacklist.
+
 ---
 
 ### <Icon name="rocket" color="var(--sl-color-accent)" /> Пакетные запросы (Execute)
@@ -141,7 +147,7 @@ Authorization: Bearer <твой_access_токен>
 ```json 
 {
   "status": "ok",
-  "timestamp": "2026-02-03T07:33:25.768663",
-  "version": "2.0"
+  "timestamp": "2026-09-11T18:46:51.382208Z",
+  "version": "2.7"
 }
 ```

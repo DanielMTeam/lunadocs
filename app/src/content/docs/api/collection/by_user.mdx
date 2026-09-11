@@ -1,0 +1,110 @@
+---
+title: by_user
+description: Публичные коллекции конкретного пользователя.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/collection/by_user/`
+
+Список публичных коллекций, которыми владеет указанный пользователь. Удобно для вкладки "Коллекции" на профиле.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `user_id` | `integer` | **Да** | ID владельца коллекций |
+| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/collection/by_user/?user_id=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/collection/by_user/',
+        params={'user_id': 1},
+    )
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+Возвращается пагинированный список коллекций:
+
+```json
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "title": "Понравившиеся программы",
+      "description": "Ставьте отметки "Добавить в коллекцию" на странице приложений, чтобы сохранять их себе для быстрого доступа",
+      "owner": {
+        "id": 1,
+        "username": "myslivets",
+        "telegram": "daneo03",
+        "discord": null,
+        "description": "Привет, мир!",
+        "website": "https://myslivets.com/",
+        "openvk": "dm",
+        "avatar_url": "//spire.lunastore.app/public/4c/d9/4cd9a4db8116107831b90c3b152b92adbaed2663b8dfa8b704bd93b694cebea8.jfif"
+      },
+      "is_system": true,
+      "is_public": true,
+      "created_at": "2026-08-05T11:04:56.810259Z",
+      "updated_at": "2026-08-23T19:18:27.695419Z",
+      "items_count": 21,
+      "mosaic_icons": [
+        "//spire.lunastore.app/public/b4/95/b4952d11a67a110406e994ea2fadee7a3002ef9da806c2bb514e0bb2cbe4cff0.png",
+        "//spire.lunastore.app/public/3f/52/3f524594fc349effc4e2c0dd3601687cc85caf89adcaba0f37c4d8986680f9a7.png"
+      ]
+    }
+  ]
+}
+```

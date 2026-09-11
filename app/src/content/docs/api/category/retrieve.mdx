@@ -1,0 +1,77 @@
+---
+title: retrieve
+description: Детали категории по ID.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/category/{id}/`
+
+Заголовок раздела: название и описание категории. Приложения внутри - через [`apps`](/api/category/apps/).
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Path)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | ID категории |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/category/1/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/category/1/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "id": 1,
+  "name": "Игры и развлечения",
+  "description": "Все мы в душе дети, любящие игрушки и всякие развлечения. И этот раздел специально для Вас!"
+}
+```

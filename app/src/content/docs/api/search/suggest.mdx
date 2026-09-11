@@ -1,0 +1,102 @@
+---
+title: suggest
+description: Подсказки для строки поиска - приложения и пользователи (typeahead).
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/search/suggest/`
+
+Лёгкий typeahead для живой строки поиска: возвращает укороченные карточки приложений и пользователей. Если в `query` меньше двух символов - просто пустые массивы, без драмы.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `query` | `string` | **Да** | Текст из строки поиска |
+| `limit` | `integer` | Нет | Максимум результатов (по умолчанию `8`, максимум `20`) |
+| `type` | `string` | Нет | Что искать: `all` (по умолчанию), `apps` или `users` |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/search/suggest/?query=lu&limit=2' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    params = {
+        'query': 'lu',
+        'limit': 2,
+        # 'type': 'apps',
+    }
+
+    response = requests.get('https://api.lunastore.app/method/v2/search/suggest/', params=params)
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "apps": [
+    {
+      "id": 403,
+      "title": "Luna",
+      "icon_url": "//spire.lunastore.app/public/64/f3/64f33493ebf471e2bf6b7e7fac116961dce6157a9f7e601670c00939b109b2a8.png",
+      "url": "/app.php?id=403"
+    }
+  ],
+  "users": [
+    {
+      "id": 2,
+      "username": "ZAZiOs",
+      "avatar_url": "//spire.lunastore.app/public/37/70/3770130d3fa7e13958104f8db5c8249a3b8e7e63cae56aee64e70f7df5f2a23a.png",
+      "url": "/profile.php?id=2"
+    }
+  ]
+}
+```
+
+<Aside type="caution" title="Meilisearch недоступен">
+При недоступности поискового движка метод ответит HTTP `503` с телом `{"error": "..."}`.
+</Aside>

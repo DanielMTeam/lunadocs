@@ -1,0 +1,105 @@
+---
+title: apps
+description: Пагинированный список приложений в категории.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/category/{id}/apps/`
+
+Приложения внутри категории. Актуальная замена V1 `getAppList`.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса
+
+| Параметр | Тип | Обязательно | Где | Описание |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | Path | ID категории |
+| `limit` | `integer` | Нет | Query | Лимит выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Query | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/category/1/apps/?limit=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/category/1/apps/',
+        params={'limit': 1},
+    )
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "count": 72,
+  "next": "http://api.lunastore.app/method/v2/category/1/apps/?limit=1&offset=1",
+  "previous": null,
+  "results": [
+    {
+      "id": 573,
+      "title": "Doom2D Forever",
+      "description": "Doom2D Forever - это Doom, только платформер.",
+      "original_author": "Doom2D Community, Prikol Soft., ID Soft.",
+      "slogan": "Платформер, основанный на Doom 2 и Doom2D.",
+      "price": 0,
+      "requirements": "**CPU**: K6-2-400 и выше\r\n**RAM**: 64Mb и выше",
+      "screenshot_urls": [
+        "//spire.lunastore.app/public/0f/53/0f535ae878b3ace252938cee78379b20afdb3f019cb0cd9b1cab4a454ddc9625.png"
+      ],
+      "developer_site": "https://doom2d.org",
+      "is_demo": false,
+      "is_under_dmca": false,
+      "icon_url": "//spire.lunastore.app/public/b2/3e/b23e09fb741da4d42d2d86ddbc12b7180d1d32a47398b88f465cf824daca6786.png",
+      "user": {
+        "id": 321,
+        "username": "Jabberwock",
+        "avatar_url": "//spire.lunastore.app/public/a3/44/a3447a438145afe4800d0feff5dbbe875ab9149e28f822ab1c39adab3329297a.png"
+      }
+    }
+  ]
+}
+```

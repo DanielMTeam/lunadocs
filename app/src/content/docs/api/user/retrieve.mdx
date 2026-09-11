@@ -1,0 +1,82 @@
+---
+title: retrieve
+description: Профиль пользователя по ID.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/user/{id}/`
+
+Публичный профиль пользователя. Поиск по нику - [`/method/v2/user/search/`](/api/user/search/), коллекции - [`by_user`](/api/collection/by_user/).
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Path)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | ID пользователя |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/user/1/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/user/1/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "id": 1,
+  "username": "myslivets",
+  "telegram": "daneo03",
+  "discord": null,
+  "description": "Привет, мир!",
+  "website": "https://myslivets.com/",
+  "openvk": "dm",
+  "avatar_url": "//spire.lunastore.app/public/4c/d9/4cd9a4db8116107831b90c3b152b92adbaed2663b8dfa8b704bd93b694cebea8.jfif"
+}
+```

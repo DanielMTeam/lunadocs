@@ -33,14 +33,14 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 # <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/getAppInfo/`
 
 <Aside type="caution" title="Устаревший метод (V1)">
-Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/marketplace/getAppInfo/`), однако мы рекомендуем использовать актуальные методы V2 (например, `marketplace.retrieve` через `execute`).
+Пути `/method/v2/marketplace/getAppInfo/` **не существует** (404). Для V2 используйте [`/method/v2/marketplace/{id}/`](/api/marketplace/retrieve/) или `marketplace.retrieve` через [`execute`](/api/execute/).
 </Aside>
 
 Метод позволяет получить подробную информацию о приложении по его уникальному идентификатору (ID).
 
 ---
 
-### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры пути (Path)
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |

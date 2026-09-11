@@ -1,0 +1,100 @@
+---
+title: search
+description: Поиск пользователей через Meilisearch с пагинацией.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/user/search/`
+
+Поиск пользователей по текстовому запросу (Meilisearch). Формат ответа такой же, как у остальных списков V2: `count` / `next` / `previous` / `results`.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `query` | `string` | **Да** | Текстовый запрос (ник и прочее) |
+| `limit` | `integer` | Нет | Размер страницы (по умолчанию `20`, максимум `100`) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/user/search/?query=alex&limit=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    params = {
+        'query': 'alex',
+        'limit': 1,
+    }
+
+    response = requests.get('https://api.lunastore.app/method/v2/user/search/', params=params)
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "count": 32,
+  "next": "http://api.lunastore.app/method/v2/user/search/?limit=1&offset=1&query=alex",
+  "previous": null,
+  "results": [
+    {
+      "id": 94,
+      "username": "Alex",
+      "telegram": null,
+      "discord": null,
+      "description": "Пользователь не оставил описание, но надеемся, что он крут",
+      "website": null,
+      "openvk": null,
+      "avatar_url": "/staticfiles/img/noavatar_64.jpg"
+    }
+  ]
+}
+```
+
+<Aside type="caution" title="Ошибки поиска">
+Без `query` - HTTP `400` (`{"error": "..."}`). Если Meilisearch лежит - HTTP `503` с тем же форматом.
+</Aside>

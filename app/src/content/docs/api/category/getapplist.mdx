@@ -33,20 +33,18 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 # <Badge text="GET" variant="note" size="medium" /> `/method/category/getAppList/`
 
 <Aside type="caution" title="Устаревший метод (V1)">
-Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/category/getAppList/`), однако мы рекомендуем использовать актуальные REST-методы V2 (например, `/method/v2/category/{id}/apps/` или `category.apps` через `execute`).
+Пути `/method/v2/category/getAppList/` **не существует** (404). Для V2 используйте [`/method/v2/category/{id}/apps/`](/api/category/apps/) или `category.apps` через [`execute`](/api/execute/).
 </Aside>
 
 Метод позволяет получить информацию о списке приложений, находящихся в определенной категории.
 
 ---
 
-### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры пути (Path) и запроса (Query)
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
-| `id` | `integer` | **Да** | ID категории :-3 (Query) |
-| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2, Query) |
-| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2, Query) |
+| `id` | `integer` | **Да** | ID категории :-3 |
 
 ---
 

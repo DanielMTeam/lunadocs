@@ -1,0 +1,104 @@
+---
+title: list
+description: Пагинированный список всех приложений в магазине.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/marketplace/`
+
+Каталог / лента приложений с пагинацией V2. Для поиска по тексту лучше [`/method/v2/marketplace/search/`](/api/marketplace/search/).
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/marketplace/?limit=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/marketplace/',
+        params={'limit': 1},
+    )
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "count": 603,
+  "next": "http://api.lunastore.app/method/v2/marketplace/?limit=1&offset=1",
+  "previous": null,
+  "results": [
+    {
+      "id": 415,
+      "title": ".NET Framework 4.0",
+      "description": ".NET Framework это среда исполнения для разработки и запуска Windows-приложений.",
+      "original_author": "Microsoft",
+      "slogan": "Поддержка запуска .NET 4.0 приложений",
+      "price": 0,
+      "requirements": "Процессор: 1 ГГц\r\nОЗУ: 512 МБ\r\nОбъём носителя: 4.5 ГБ",
+      "screenshot_urls": [
+        "//spire.lunastore.app/public/57/3d/573dcac0afb5f0816c40663a63e5970c471adef2c4ea80a05602d43c9191c178.png"
+      ],
+      "developer_site": "https://www.microsoft.com/en-us/download/details.aspx?id=17718",
+      "is_demo": false,
+      "is_under_dmca": false,
+      "icon_url": "//spire.lunastore.app/public/c5/5a/c55a0d7273816658a29c23a0a0d8933cc152a2d44e5c590822a3fa3416341962.png",
+      "user": {
+        "id": 24,
+        "username": "n0cha3",
+        "avatar_url": "//spire.lunastore.app/public/ef/61/ef617f01578192025c00fd327ef272451e84cea6725b67fbf7cd461de2ddfcdc.png"
+      }
+    }
+  ]
+}
+```

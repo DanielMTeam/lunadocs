@@ -1,0 +1,119 @@
+---
+title: search
+description: Поиск приложений через Meilisearch с пагинацией и фильтрами.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/marketplace/search/`
+
+Актуальный поиск приложений на базе Meilisearch. В отличие от V1, ответ приходит в привычном пагинированном формате, плюс можно фильтровать по категории, автору и бесплатности.
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Query)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `query` | `string` | **Да** | Текстовый запрос ^_^ |
+| `category` | `integer` | Нет | ID категории для фильтрации |
+| `author` | `integer` | Нет | ID пользователя-автора |
+| `is_free` | `string` | Нет | Только бесплатные приложения (`on`, `1` или `true`) |
+| `limit` | `integer` | Нет | Размер страницы (по умолчанию `20`, максимум `100`) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/marketplace/search/?query=luna&limit=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    params = {
+        'query': 'luna',
+        'limit': 1,
+        # 'category': 1,
+        # 'author': 42,
+        # 'is_free': 'true',
+    }
+
+    response = requests.get('https://api.lunastore.app/method/v2/marketplace/search/', params=params)
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+При успешном запросе возвращается пагинированный список приложений:
+
+```json
+{
+  "count": 10,
+  "next": "http://api.lunastore.app/method/v2/marketplace/search/?limit=1&offset=1&query=luna",
+  "previous": null,
+  "results": [
+    {
+      "id": 403,
+      "title": "Luna",
+      "description": "Та самая стандартная тема Luna из Windows XP. Пригодится, если в вашей сборке XP нет этой темы.",
+      "original_author": "Microsoft",
+      "slogan": "Классика жанра. No more.",
+      "price": 0,
+      "requirements": "**Операционная система:** Windows XP и выше",
+      "screenshot_urls": [
+        "//spire.lunastore.app/public/04/69/0469a57102981b2dc50c70f8092183f3b782919995d598910a38f4477dad805e.png"
+      ],
+      "developer_site": null,
+      "is_demo": false,
+      "is_under_dmca": false,
+      "icon_url": "//spire.lunastore.app/public/64/f3/64f33493ebf471e2bf6b7e7fac116961dce6157a9f7e601670c00939b109b2a8.png",
+      "user": {
+        "id": 1,
+        "username": "myslivets",
+        "avatar_url": "//spire.lunastore.app/public/4c/d9/4cd9a4db8116107831b90c3b152b92adbaed2663b8dfa8b704bd93b694cebea8.jfif"
+      }
+    }
+  ]
+}
+```
+
+<Aside type="caution" title="Ошибки поиска">
+Если не передать `query`, API вернёт HTTP `400` с телом вида `{"error": "..."}`. Если Meilisearch недоступен - HTTP `503` с тем же форматом.
+</Aside>

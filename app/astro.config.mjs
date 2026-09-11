@@ -15,9 +15,9 @@ export default defineConfig({
             },
             social: [
                 {
-                    icon: "gitlab",
-                    label: "GitLab",
-                    href: "https://git.myslivets.com/myslivets/project-luna/lunastore",
+                    icon: "github",
+                    label: "GitHub",
+                    href: "https://github.com/DanielMTeam/lunastore",
                 },
                 {
                     icon: "telegram",
@@ -66,11 +66,111 @@ export default defineConfig({
                             ],
                         },
                         {
+                            label: "Приложения",
+                            items: [
+                                {
+                                    label: "list",
+                                    slug: "api/marketplace/list",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "retrieve",
+                                    slug: "api/marketplace/retrieve",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "search",
+                                    slug: "api/marketplace/search",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Дистрибутивы",
+                            items: [
+                                {
+                                    label: "by_app",
+                                    slug: "api/distribution/by_app",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "retrieve",
+                                    slug: "api/distribution/retrieve",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "list",
+                                    slug: "api/distribution/list",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
                             label: "Категории",
                             items: [
                                 {
-                                    label: "category",
+                                    label: "list",
                                     slug: "api/category/list",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "retrieve",
+                                    slug: "api/category/retrieve",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "apps",
+                                    slug: "api/category/apps",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Коллекции",
+                            items: [
+                                {
+                                    label: "list",
+                                    slug: "api/collection/list",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "retrieve",
+                                    slug: "api/collection/retrieve",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "apps",
+                                    slug: "api/collection/apps",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "by_user",
+                                    slug: "api/collection/by_user",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Пользователи",
+                            items: [
+                                {
+                                    label: "retrieve",
+                                    slug: "api/user/retrieve",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                                {
+                                    label: "search",
+                                    slug: "api/user/search",
+                                    badge: { text: "GET", variant: "note" },
+                                },
+                            ],
+                        },
+                        {
+                            label: "Поиск",
+                            items: [
+                                {
+                                    label: "suggest",
+                                    slug: "api/search/suggest",
                                     badge: { text: "GET", variant: "note" },
                                 },
                             ],

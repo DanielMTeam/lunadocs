@@ -55,15 +55,20 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 | :--- | :--- | :--- |
 | `user.list` | Получение списка всех пользователей | Для админки или списков |
 | `user.retrieve` | Получить инфу об одном пользователе (`pk`) | Профиль пользователя |
+| `user.search` | Поиск пользователей (`query`) | Строка поиска пользователей |
 | `marketplace.list` | Список всех приложений в магазине | Главная страница или лента |
 | `marketplace.retrieve` | Детали одного приложения (`pk`) | Страница приложения |
-| `marketplace.search` | Поиск приложений (`query`) | Строка поиска |
+| `marketplace.search` | Поиск приложений через Meilisearch (`query`, опционально `category` / `author` / `is_free`) | Строка поиска |
 | `category.list` | Список всех категорий | Боковое меню или фильтры |
 | `category.retrieve` | Детали категории (`pk`) | Заголовок страницы категории |
 | `category.apps` | Приложения внутри конкретной категории (`pk`) | Просмотр раздела (например, "Игры") |
 | `distribution.list` | Список всех сборок/дистрибутивов вообще | Техническая статистика |
 | `distribution.retrieve` | Детали одной сборки (`pk`) | Перед скачиванием |
 | `distribution.by_app` | Сборки конкретного приложения (`app_id`) | Вкладка "Версии" на странице приложения |
+| `collection.list` | Список публичных коллекций | Каталог коллекций |
+| `collection.retrieve` | Детали коллекции (`pk`) | Страница коллекции |
+| `collection.apps` | Приложения в коллекции (`pk`) | Содержимое коллекции |
+| `collection.by_user` | Коллекции пользователя (`user_id`) | Профиль |
 
 ---
 
@@ -96,12 +101,24 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 ```
 
 #### 3. Поиск с пагинацией
-Поиск приложений по запросу "mario" со смещением (для второй страницы результатов).
+Поиск приложений по запросу "mario" со смещением (для второй страницы результатов). Можно добавить фильтры вроде `is_free` или `category`.
 
 ```json
 {
   "code": [
-    {"method": "marketplace.search", "params": {"query": "mario", "limit": 10, "offset": 10}}
+    {"method": "marketplace.search", "params": {"query": "mario", "limit": 10, "offset": 10, "is_free": "true"}}
+  ]
+}
+```
+
+#### 4. Страница коллекции
+Одним запросом - карточка коллекции и её приложения.
+
+```json
+{
+  "code": [
+    {"method": "collection.retrieve", "params": {"pk": 37}},
+    {"method": "collection.apps", "params": {"pk": 37, "limit": 20}}
   ]
 }
 ```

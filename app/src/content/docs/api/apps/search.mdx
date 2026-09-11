@@ -33,7 +33,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 # <Badge text="GET" variant="note" size="medium" /> `/method/marketplace/search/`
 
 <Aside type="caution" title="Устаревший метод (V1)">
-Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/marketplace/search/`), однако мы рекомендуем использовать актуальные методы V2 (например, через `execute`).
+Этот метод относится к API V1 и возвращает enumerated-map (`{"1": {...}, "2": {...}}`). Для актуального поиска используйте V2: [`/method/v2/marketplace/search/`](/api/marketplace/search/) (пагинация + фильтры Meilisearch) или вызов `marketplace.search` через [`execute`](/api/execute/).
 </Aside>
 
 Метод позволяет выполнить поиск приложений, исходя из текстового запроса.
@@ -45,8 +45,6 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
 | `query` | `string` | **Да** | Текстовый запрос ^_^ |
-| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
-| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
 
 ---
 
@@ -141,30 +139,25 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
 
-При успешном запросе возвращается список, внутри которого находятся полученные объекты `application`.
+При успешном запросе возвращается enumerated-map объектов `application` (не пагинация V2):
 
-```json 
+```json
 {
-  "count": 1,
-  "next": null,
-  "previous": null,
-  "results": [
-    {
-      "id": 3,
-      "title": "New Test App",
-      "description": "wow, there is a description",
-      "original_author": "unknown",
-      "slogan": "lmao",
-      "price": 0,
-      "requirements": "computer, keyboard and mouse",
-      "screenshot_urls": [
-        "//192.168.48.128:8080/public/48/7b/487b098fd79b05c04df6f48fdba21c52dec936f03197a0b89e7bea3ae5b65bf3.jfif"
-      ],
-      "developer_site": "https://fayzetw.in",
-      "is_demo": false,
-      "is_under_dmca": false,
-      "icon_url": "//192.168.48.128:8080/public/6e/1b/6e1b1b8005bd9c7ccc9c7b8da2b5470eba2ea5eca6464864d420cdf2739f15e4.jfif"
-    }
-  ]
+  "1": {
+    "id": 403,
+    "title": "Luna",
+    "description": "Та самая стандартная тема Luna из Windows XP. Пригодится, если в вашей сборке XP нет этой темы.",
+    "original_author": "Microsoft",
+    "slogan": "Классика жанра. No more.",
+    "price": 0,
+    "requirements": "**Операционная система:** Windows XP и выше",
+    "screenshot_urls": [
+      "//spire.lunastore.app/public/04/69/0469a57102981b2dc50c70f8092183f3b782919995d598910a38f4477dad805e.png"
+    ],
+    "developer_site": null,
+    "is_demo": false,
+    "is_under_dmca": false,
+    "icon_url": "//spire.lunastore.app/public/64/f3/64f33493ebf471e2bf6b7e7fac116961dce6157a9f7e601670c00939b109b2a8.png"
+  }
 }
 ```

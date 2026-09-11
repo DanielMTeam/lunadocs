@@ -1,6 +1,6 @@
 ---
-title: list
-description: Метод позволяет получить список всех категорий в инстансе.
+title: by_app
+description: Список дистрибутивов (версий) конкретного приложения.
 ---
 
 import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
@@ -30,9 +30,9 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     }
 `}</style>
 
-# <Badge text="GET" variant="note" size="medium" /> `/method/v2/category/`
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/distribution/by_app/`
 
-Метод позволяет получить список всех категорий приложений в системе.
+Версии / сборки приложения для вкладки "Скачать". Актуальная замена V1 `getDistributionsList`.
 
 ---
 
@@ -40,8 +40,9 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
+| `app_id` | `integer` | **Да** | ID приложения |
 | `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
-| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Сдвиг выдачи (пагинация V2) |
 
 ---
 
@@ -51,7 +52,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
   <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/v2/category/' \
+      'https://api.lunastore.app/method/v2/distribution/by_app/?app_id=403' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -59,7 +60,10 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     ```python
     import requests
 
-    response = requests.get('https://api.lunastore.app/method/v2/category/')
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/distribution/by_app/',
+        params={'app_id': 403},
+    )
     print(response.json())
     ```
   </TabItem>
@@ -69,24 +73,28 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
 
-При успешном запросе возвращается список категорий с поддержкой пагинации:
+Пагинированный список дистрибутивов:
 
-```json 
+```json
 {
-  "count": 2,
+  "count": 1,
   "next": null,
   "previous": null,
   "results": [
     {
-      "id": 1,
-      "name": "Инструменты",
-      "description": "Лучшие инструменты"
-    },
-    {
-      "id": 2,
-      "name": "Утилиты",
-      "description": "Полезные программы"
+      "id": 4760,
+      "app": 403,
+      "version": "1.0",
+      "link": "/get_dist_file/4760/",
+      "url": "",
+      "has_download": true,
+      "published": "2026-08-03T17:48:54.908257Z",
+      "release_description": null
     }
   ]
 }
 ```
+
+<Aside type="note" title="Скачивание">
+Если `has_download: true`, файл лежит по относительному пути `link`. Поле `url` - внешняя ссылка (если сборка не на CDN).
+</Aside>

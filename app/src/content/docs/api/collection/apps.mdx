@@ -1,0 +1,105 @@
+---
+title: apps
+description: Пагинированный список приложений внутри коллекции.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/collection/{id}/apps/`
+
+Содержимое коллекции: обычный пагинированный список приложений (`count` / `next` / `previous` / `results`).
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса
+
+| Параметр | Тип | Обязательно | Где | Описание |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | Path | ID коллекции |
+| `limit` | `integer` | Нет | Query | Лимит выдачи (пагинация V2) |
+| `offset` | `integer` | Нет | Query | Сдвиг выдачи (пагинация V2) |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/collection/37/apps/?limit=1' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get(
+        'https://api.lunastore.app/method/v2/collection/37/apps/',
+        params={'limit': 1},
+    )
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "count": 17,
+  "next": "http://api.lunastore.app/method/v2/collection/37/apps/?limit=1&offset=1",
+  "previous": null,
+  "results": [
+    {
+      "id": 44,
+      "title": "Windows Search",
+      "description": "Windows Search это аддон для твоего таскбара. Теперь ты можешь крайне легко искать файлы, почтовые письма, фотографии, документы и прочие файлы прямо с панели задач!",
+      "original_author": "Microsoft",
+      "slogan": "Поисковой инструмент от Microsoft",
+      "price": 0,
+      "requirements": "Windows Search требует как минимум Windows 2000 / XP и службу Поиска для работы",
+      "screenshot_urls": [
+        "//spire.lunastore.app/public/16/8a/168a7871e94a67484d486ea921591503e16dbbbff4d0ecc4a168acf07f9183f1.png"
+      ],
+      "developer_site": "http://www.microsoft.com/",
+      "is_demo": false,
+      "is_under_dmca": false,
+      "icon_url": "//spire.lunastore.app/public/12/37/1237df44502c1142662c1967f9a88c141a51dbe22dd0d042655e4e47673fa211.png",
+      "user": {
+        "id": 20,
+        "username": "mryoshi",
+        "avatar_url": "/staticfiles/img/noavatar_64.jpg"
+      }
+    }
+  ]
+}
+```

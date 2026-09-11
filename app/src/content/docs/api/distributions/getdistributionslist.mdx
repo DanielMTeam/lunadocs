@@ -33,10 +33,10 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 # <Badge text="GET" variant="note" size="medium" /> `/method/distribution/getDistributionsList/`
 
 <Aside type="caution" title="Устаревший метод (V1)">
-Этот метод изначально относится к API V1. Его всё ещё можно вызывать и по V2 пути (`/method/v2/distribution/getDistributionsList/`), однако мы рекомендуем использовать актуальные методы V2 (например, `distribution.by_app` через `execute` или напрямую по V2 пути).
+Пути `/method/v2/distribution/getDistributionsList/` **не существует** (404). Для V2 используйте [`/method/v2/distribution/by_app/`](/api/distribution/by_app/) (`app_id`) или `distribution.by_app` через [`execute`](/api/execute/).
 </Aside>
 
-Метод позволяет получить список версий (т.е. дистрибуций), загруженных для определенной программы.
+Метод позволяет получить список версий (т.е. дистрибуций), загруженных для определенной программы. Ответ - enumerated-map (`{"1": {...}, "2": {...}}`), не пагинация V2.
 
 ---
 
@@ -44,9 +44,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 | Параметр | Тип | Обязательно | Описание |
 | :--- | :--- | :--- | :--- |
-| `app_id` | `integer` | **Да** | ID приложения |
-| `limit` | `integer` | Нет | Лимит выдачи (пагинация V2) |
-| `offset`| `integer` | Нет | Сдвиг выдачи (пагинация V2) |
+| `id` | `integer` | **Да** | ID приложения (не `app_id` - с ним будет `400`) |
 
 ---
 
@@ -56,7 +54,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     <TabItem label="cURL" icon="terminal">
     ```bash
     curl -X 'GET' \
-      'https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1' \
+      'https://api.lunastore.app/method/distribution/getDistributionsList/?id=403' \
       -H 'accept: application/json'
     ```
   </TabItem>
@@ -65,7 +63,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
     import requests
 
     params = {
-        'app_id': 1,
+        'id': 403,
     }
 
     response = requests.get('https://api.lunastore.app/method/distribution/getDistributionsList/', params=params)
@@ -74,7 +72,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
   </TabItem>
   <TabItem label="Go" icon="seti:go">
     ```go
-    resp, err := http.Get("https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1")
+    resp, err := http.Get("https://api.lunastore.app/method/distribution/getDistributionsList/?id=403")
     ```
   </TabItem>
   <TabItem label="C#" icon="seti:c-sharp">
@@ -88,7 +86,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         static async Task Main()
         {
             using var client = new HttpClient();
-            var url = "https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1";
+            var url = "https://api.lunastore.app/method/distribution/getDistributionsList/?id=403";
             
             try
             {
@@ -119,7 +117,7 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
         CURL* curl = curl_easy_init();
         if(curl) {
             std::string readBuffer;
-            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/distribution/getDistributionsList/?app_id=1");
+            curl_easy_setopt(curl, CURLOPT_URL, "https://api.lunastore.app/method/distribution/getDistributionsList/?id=403");
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
@@ -141,32 +139,19 @@ import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/comp
 
 ### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
 
-При успешном запросе возвращается список, внутри которого находятся объекты `distribution`.
+При успешном запросе возвращается enumerated-map объектов `distribution`:
 
-```json 
+```json
 {
-  "count": 2,
-  "next": null,
-  "previous": null,
-  "results": [
-    {
-      "id": 2, // id of distibution
-      "app": 1, // id of app 
-      "version": "v1.0.0",
-      "link": "/get_dist_file/2/",
-      "url": "",
-      "has_download": true,
-      "published": "2026-04-19T10:22:10.106166Z"
-    },
-    {
-      "id": 3,
-      "app": 1,
-      "version": "v.1.2",
-      "link": "/get_dist_file/3/",
-      "url": "",
-      "has_download": true,
-      "published": "2026-04-19T11:13:00.005804Z"
-    }
-  ]
+  "1": {
+    "id": 4760,
+    "app": 403,
+    "version": "1.0",
+    "link": "/get_dist_file/4760/",
+    "url": "",
+    "has_download": true,
+    "published": "2026-08-03T17:48:54.908257Z",
+    "release_description": null
+  }
 }
 ```

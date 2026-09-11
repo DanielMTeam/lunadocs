@@ -5,102 +5,158 @@ description: Базовое описание переменных окружен
 
 import { Aside, Icon } from '@astrojs/starlight/components';
 
-В начале было слово, а в основе настройки LunaStore лежит конфигурационный файл переменных окружения. Он имеет название `.env`. Вы можете использовать `env.example` из корня репозитория как шаблон. Ниже приведено описание всех параметров.
+В основе настройки LunaStore лежит файл `.env` в корне репозитория. Шаблон - [`.env.example`](https://github.com/DanielMTeam/lunastore/blob/main/.env.example). Скопируйте его в `.env` и правьте под свой инстанс.
+
+<Aside type="note" title="django-constance">
+  Многие настройки ниже управляются через django-constance: правки из админки могут синхронизироваться обратно в `.env`. Ручные правки файла обычно требуют перезапуска приложения.
+</Aside>
 
 ## <Icon name="setting" color="var(--sl-color-accent)" /> Основные настройки инстанса и Django
 
-Базовые параметры и общие настройки фреймворка.
-
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `VERSION` | Версия инстанса LunaStore | `"2.0"` |
-| `ADMIN_URL` | Путь до панели администратора | `"admin"` |
-| `EXTERNAL_MEDIA_URL` | Прямая ссылка для раздачи UGC | `"/media/"` |
+| `VERSION` | Версия инстанса LunaStore | `"2.7"` |
+| `ADMIN_URL` | Путь до панели администратора | `".."` |
+| `EXTERNAL_MEDIA_URL` | URL раздачи UGC / медиа | `"http://192.168.1.10/media/"` |
 | `SECRET_KEY` | Секретный ключ Django | `""` |
-| `DEBUG` | Режим отладки | `"True"` |
-| `ADMIN_EMAIL` | Контактный E-mail администратора проекта | `"questions@myslivets.com"` |
+| `DEBUG` | Режим отладки (`"True"` для dev, `"False"` для prod) | `"True"` |
+| `ADMIN_EMAIL` | Контактный E-mail администратора | `"questions@example.com"` |
 
 <Aside type="danger" title="Обратите внимание!">
-* **`SECRET_KEY`**: Крайне важно, чтобы данный ключ был сложным настолько, насколько это возможно. Чорт побери, ни при каких обстоятельствах не стоит кому-либо говорить данный ключ.
-* **`DEBUG`**: Включайте (`True`) **только** для разработки/отладки. По окончанию технических работ, этот параметр СТРОГО должен быть `"False"`, иначе Вы рискуете слегка глупой утечкой данных и параметров вашего сервера на публичное обозрение.
+* **`SECRET_KEY`**: должен быть максимально сложным. Ни при каких обстоятельствах не светите его публично.
+* **`DEBUG`**: `"True"` только для разработки. В production строго `"False"`, иначе рискуете утечкой данных и параметров сервера.
 </Aside>
 
 ## <Icon name="document" color="var(--sl-color-accent)" /> База данных (PostgreSQL)
 
-Параметры для подключения к вашей СУБД.
-
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `DB_NAME` | Название базы данных | `""` |
-| `DB_USER` | Имя пользователя базы данных | `"db"` |
+| `DB_NAME` | Название базы данных | `"lunastore"` |
+| `DB_USER` | Имя пользователя БД | `"db"` |
 | `DB_PASSWORD` | Пароль пользователя БД | `""` |
-| `DB_HOST` | Хост базы данных. Если PostgreSQL крутится в том же Docker-окружении, обычно указывают `db` | `"db"` |
-| `DB_PORT` | Порт для подключения к базе данных | `""` |
+| `DB_HOST` | Хост. Если Postgres в том же Docker Compose - обычно `db` | `"db"` |
+| `DB_PORT` | Порт PostgreSQL | `"5432"` |
 
 ## <Icon name="external" color="var(--sl-color-accent)" /> Авторизация (OpenID / Authentik)
 
-Если Вы используете сторонний провайдер аутентификации (например, Authentik), приведите в порядок эти параметры.
+Если используете сторонний OIDC-провайдер (например, Authentik):
 
 | Переменная | Описание |
 | :--- | :--- |
-| `OIDC_CLIENT_ID` | Идентификатор клиента OpenID (Client ID) |
-| `OIDC_CLIENT_SECRET` | Секретный ключ клиента (Client Secret) |
-| `OIDC_ENDPOINT` | Основной URL (эндпоинт) вашего OpenID-провайдера |
-| `OIDC_TOKEN_ENDPOINT` | Эндпоинт для получения токенов доступа |
-| `OIDC_USER_ENDPOINT` | Эндпоинт для запроса данных профиля пользователя |
-| `LOGIN_REDIRECT_URL` | Куда перенаправлять пользователя после успешного входа |
-| `LOGOUT_REDIRECT_URL` | Куда перенаправлять пользователя после выхода (логаута) |
-| `OIDC_SIGN_ALGO` | Алгоритм подписи токенов (например, `RS256`) |
-| `OIDC_JWKS_ENDPOINT` | Ссылка на JSON Web Key Set (JWKS) для проверки подписей |
+| `OIDC_CLIENT_ID` | Client ID |
+| `OIDC_CLIENT_SECRET` | Client Secret |
+| `OIDC_ENDPOINT` | Базовый endpoint провайдера |
+| `OIDC_TOKEN_ENDPOINT` | Endpoint выдачи токенов |
+| `OIDC_USER_ENDPOINT` | Endpoint профиля пользователя |
+| `LOGIN_REDIRECT_URL` | Куда редиректить после входа |
+| `LOGOUT_REDIRECT_URL` | Куда редиректить после выхода |
+| `OIDC_SIGN_ALGO` | Алгоритм подписи (например, `RS256`) |
+| `OIDC_JWKS_ENDPOINT` | JWKS для проверки подписей |
 
-## <Icon name="random" color="var(--sl-color-accent)" /> Интеграция с LunaSpire и API
-
-Настройки связи между компонентами платформы.
+## <Icon name="random" color="var(--sl-color-accent)" /> LunaSpire и API
 
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `LUNASPIRE_SECRET_KEY` | Секретный ключ от движка LunaSpire (должен совпадать с настройками самого LunaSpire). | `"supersecretkey"` |
-| `LUNASPIRE_URL` | Полный URL до инстанса LunaSpire | `"http://192.168.1.10:8080"` |
-| `LUNASPIRE_URL_WITHOUT_PROTO`| Домен инстанса LunaSpire (без `http/https`) | `"spire.lunastore.app"` |
-| `API_URL` | Внутренний или внешний URL для обращений к API LunaStore | `"http://192.168.1.10:7088"` |
+| `LUNASPIRE_SECRET_KEY` | Секрет LunaSpire (должен совпадать с конфигом Spire) | `"supersecretkey"` |
+| `LUNASPIRE_URL` | Полный URL LunaSpire | `"http://192.168.1.10:8080"` |
+| `LUNASPIRE_URL_WITHOUT_PROTO` | Домен Spire без схемы | `"spire.lunastore.app"` |
+| `API_URL` | URL API LunaStore | `"http://192.168.1.10:7088"` |
+
+## <Icon name="approve-check" color="var(--sl-color-accent)" /> Поиск (Meilisearch)
+
+Полнотекстовый поиск приложений и пользователей.
+
+| Переменная | Описание | Пример / По умолчанию |
+| :--- | :--- | :--- |
+| `MEILISEARCH_ENABLED` | Включён ли Meilisearch | `"True"` |
+| `MEILISEARCH_URL` | URL инстанса (внутри Docker обычно `http://meilisearch:7700`) | `"http://meilisearch:7700"` |
+| `MEILI_MASTER_KEY` | Master key Meilisearch (в prod обязательно смените) | `"change-me-in-production"` |
+
+<Aside type="tip">
+  После первого наполнения каталога прогоните `reindex_search` (в dev: `make dev-reindex-search`), иначе поиск может быть пустым.
+</Aside>
 
 ## <Icon name="forward-slash" color="var(--sl-color-accent)" /> Сеть, домены и безопасность
 
-Настройки CORS, куки и ограничений по хостам.
-
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `ALLOWED_HOSTS` | Список разрешенных IP/доменов, с которых доступен сайт. Разделитель — `;` | `"192.168.1.10;192.168.1.1"` |
-| `CORS_ALLOWED_ORIGINS` | Домены, которым разрешено делать кросс-доменные запросы (CORS) | `"http://192.168.1.10;..."` |
-| `CSRF_TRUSTED_ORIGINS` | Доверенные источники для проверки CSRF токенов | `"https://lunastore.app"` |
-| `SESSION_COOKIE_DOMAIN` | Домен для установки сессионных куки (начинается с точки) | `".lunastore.app"` |
-| `CSRF_COOKIE_DOMAIN` | Домен для установки CSRF куки | `".lunastore.app"` |
-| `MOTD_LIST` | Слоганы. Основываются на компоненте "Сообщения дня (MOTD)". Разделяются через `;` | `"Windows XP;время подавать напитки и вершить судьбами"` |
+| `ALLOWED_HOSTS` | Разрешённые хосты. Разделитель - `;` | `"192.168.1.10;127.0.0.1"` |
+| `TRUSTED_PROXIES` | Прокси, которым можно доверять `CF-Connecting-IP` / `X-Real-IP` / `X-Forwarded-For` | `"10.0.0.0/8;127.0.0.1"` |
+| `CORS_ALLOWED_ORIGINS` | Origins для CORS | `"http://192.168.1.10"` |
+| `CSRF_TRUSTED_ORIGINS` | Доверенные origins для CSRF | `"https://lunastore.app"` |
+| `SESSION_COOKIE_DOMAIN` | Домен session cookie | `".lunastore.app"` |
+| `CSRF_COOKIE_DOMAIN` | Домен CSRF cookie | `".lunastore.app"` |
+| `MOTD_LIST` | Сообщения дня (MOTD), через `;` | `"Windows XP;время подавать напитки"` |
+| `GEO_DOMAIN_PROXY_ENABLED` | Гео-проксирование на региональные домены | `"True"` |
+| `GEO_DOMAIN_OVERRIDES` | JSON с override доменов по стране (`BASE_URL` / `API_URL` / `SPIRE_URL`) | см. `.env.example` |
+| `ALLOW_MODERATOR_LOGIN_AS_USER` | Разрешить модератору логиниться как пользователь | `False` |
+| `ENABLE_DRM` | Включить DRM-логику | `"True"` |
+| `ENABLE_DISTRIBUTION_PROXY` | Проксирование скачивания дистрибутивов | `"True"` |
 
 ## <Icon name="laptop" color="var(--sl-color-accent)" /> Регистрация, аккаунты и инвайты
 
-Управление системой аккаунтов
+| Переменная | Описание | Пример / По умолчанию |
+| :--- | :--- | :--- |
+| `BCRYPT_ROUNDS` | Раунды bcrypt (рекомендуем дефолт) | `12` |
+| `REGISTRATION_IS_ENABLED` | Открытая регистрация | `"True"` |
+| `DEVELOPER_REGISTRATION_IS_ENABLED` | Заявки на статус разработчика | `"True"` |
+| `INVITES_ON_REGISTER` | Регистрация только по инвайтам | `"True"` |
+| `MAX_INVITE_USES_COUNT` | Сколько раз можно использовать один инвайт | `3` |
+| `MAX_INVITE_DAYS_LIMIT` | Дневной лимит выдачи инвайтов | `7` |
+| `RETENTION_ACTIVITY_LOG_DAYS` | Хранение логов активности (включая IP), дни; `0` = минимально / GDPR-friendly | `0` |
+
+## <Icon name="document" color="var(--sl-color-accent)" /> SMTP (почта)
 
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `BCRYPT_ROUNDS` | Количество раундов хеширования паролей (влияет на безопасность и нагрузку, чем больше число тем сложнее, но мы рекомендуем оставлять значение по умолчанию) | `12` |
-| `REGISTRATION_IS_ENABLED` | Включена ли открытая регистрация (`True`/`False`) | `"True"` |
-| `DEVELOPER_REGISTRATION_IS_ENABLED`| Разрешено ли пользователям подавать заявки на статус разработчика | `"True"` |
-| `INVITES_ON_REGISTER` | Регистрация только по инвайт-кодам (`True`/`False`) | `"True"` |
-| `MAX_INVITE_USES_COUNT` | Сколько раз можно использовать один инвайт-код | `3` |
-| `MAX_INVITE_DAYS_LIMIT` | Дневной лимит на количество выданных приглашений | `7` |
-| `RETENTION_ACTIVITY_LOG_DAYS`| Срок хранения логов активности пользователей (включая IP) в днях для соблюдения GDPR | `0` |
+| `EMAIL_HOST` | SMTP-хост | `"smtp.gmail.com"` |
+| `EMAIL_PORT` | Порт | `"587"` |
+| `EMAIL_USE_TLS` | TLS | `"True"` |
+| `EMAIL_USE_SSL` | SSL | `"False"` |
+| `EMAIL_HOST_USER` | Логин SMTP | `"your_email@gmail.com"` |
+| `EMAIL_HOST_PASSWORD` | Пароль / app password | `""` |
+| `DEFAULT_FROM_EMAIL` | From по умолчанию | `"your_email@gmail.com"` |
 
-## <Icon name="rocket" color="var(--sl-color-accent)" /> Рейтлимиты и логгирование
-
-Защита от DDoS/брутфорса и мониторинг изменений в инстансе
+## <Icon name="rocket" color="var(--sl-color-accent)" /> Рейтлимиты и API throttle
 
 | Переменная | Описание | Пример / По умолчанию |
 | :--- | :--- | :--- |
-| `RATE_LIMIT_ENABLED` | Включены ли рейтлимиты (`True`/`False`) | `"True"` |
-| `RATE_LIMIT_WINDOW` | Количество запросов, разрешенных за указанный промежуток времени | `25` |
-| `RATE_LIMIT` | Время в секундах, за которое считаются запросы (окно) | `45` |
-| `TELEGRAM_LOGGER_ENABLED` | Включена ли отправка логов ошибок/событий в Telegram | `True` |
-| `TELEGRAM_BOT_TOKEN` | Токен вашего бота Telegram (от BotFather) | `""` |
-| `TELEGRAM_LOG_CHAT_ID` | ID чата/группы, куда бот будет присылать логи | `""` |
-| `TELEGRAM_LOG_TOPIC_ID` | ID конкретного топика (ветки), если логи отправляются в группу с темами | `""` |
+| `RATE_LIMIT_ENABLED` | Общие рейтлимиты сайта | `"True"` |
+| `RATE_LIMIT_WINDOW` | Сколько запросов в окне | `25` |
+| `RATE_LIMIT` | Длина окна в секундах | `45` |
+| `API_THROTTLE_ENABLED` | Throttle для DRF API | `"True"` |
+| `API_THROTTLE_ANON_RATE` | Лимит анонимов (`число/период`, период = `s\|m\|h\|d`) | `"1000/hour"` |
+| `API_THROTTLE_USER_RATE` | Лимит авторизованных | `"5000/hour"` |
+
+## <Icon name="information" color="var(--sl-color-accent)" /> Логирование и мониторинг
+
+| Переменная | Описание | Пример / По умолчанию |
+| :--- | :--- | :--- |
+| `TELEGRAM_LOGGER_ENABLED` | Логи в Telegram | `True` |
+| `TELEGRAM_BOT_TOKEN` | Токен бота | `""` |
+| `TELEGRAM_LOG_CHAT_ID` | ID чата | `""` |
+| `TELEGRAM_LOG_TOPIC_ID` | ID топика (если форум) | `""` |
+| `LOG_MODERATOR_LOGINS` | Логировать входы модераторов | `"True"` |
+| `SENTRY_ENABLED` | Отправка ошибок в GlitchTip / Sentry | `"True"` |
+| `SENTRY_DSN` | DSN проекта (пустой = выкл) | `""` |
+| `SENTRY_TRACES_SAMPLE_RATE` | Доля запросов для tracing (`0.0` - `1.0`) | `0.2` |
+| `SENTRY_PROFILES_SAMPLE_RATE` | Доля profiling | `0.1` |
+| `SENTRY_ENVIRONMENT` | Тег окружения | `"production"` |
+
+## <Icon name="puzzle" color="var(--sl-color-accent)" /> ClickHouse analytics (опционально)
+
+По умолчанию выключено. Поднимается профилем Compose `analytics`.
+
+| Переменная | Описание | Пример / По умолчанию |
+| :--- | :--- | :--- |
+| `ANALYTICS_ENABLED` | Включить аналитику | `"False"` |
+| `CLICKHOUSE_HOST` | Хост | `"clickhouse"` |
+| `CLICKHOUSE_PORT` | HTTP-порт | `8123` |
+| `CLICKHOUSE_USER` | Пользователь | `"analytics"` |
+| `CLICKHOUSE_PASSWORD` | Пароль | `"analytics"` |
+| `CLICKHOUSE_DATABASE` | База | `"lunastore_analytics"` |
+| `CLICKHOUSE_SECURE` | HTTPS к ClickHouse | `"False"` |
+
+<Aside type="tip">
+  Dev: `make dev-analytics-up`, затем `make dev-analytics-migrate`. Prod: `make analytics-up` / `make analytics-migrate`.
+</Aside>

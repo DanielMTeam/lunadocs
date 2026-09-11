@@ -1,0 +1,100 @@
+---
+title: retrieve
+description: Подробная информация о приложении по ID.
+---
+
+import { Aside, Tabs, TabItem, Badge, Card, Icon } from '@astrojs/starlight/components';
+
+<style>{`
+    h1#_top {
+        display: none !important;
+    }
+    
+    .sl-markdown-content,
+    .content-panel {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+    
+    .sl-markdown-content > h1:first-of-type {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    .sl-markdown-content {
+        padding-top: 0 !important;
+    }
+    
+    .content-panel {
+        padding-top: 0.0rem !important;
+    }
+`}</style>
+
+# <Badge text="GET" variant="note" size="medium" /> `/method/v2/marketplace/{id}/`
+
+Актуальная замена V1 `getAppInfo`: карточка одного приложения. Версии/сборки берите через [`distribution/by_app`](/api/distribution/by_app/).
+
+---
+
+### <Icon name="open-book" color="var(--sl-color-accent)" /> Параметры запроса (Path)
+
+| Параметр | Тип | Обязательно | Описание |
+| :--- | :--- | :--- | :--- |
+| `id` | `integer` | **Да** | ID приложения |
+
+---
+
+### <Icon name="rocket" color="var(--sl-color-accent)" /> Пример использования
+
+<Tabs>
+  <TabItem label="cURL" icon="terminal">
+    ```bash
+    curl -X 'GET' \
+      'https://api.lunastore.app/method/v2/marketplace/403/' \
+      -H 'accept: application/json'
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    import requests
+
+    response = requests.get('https://api.lunastore.app/method/v2/marketplace/403/')
+    print(response.json())
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+### <Icon name="comment-alt" color="var(--sl-color-accent)" /> Формат ответа
+
+```json
+{
+  "id": 403,
+  "title": "Luna",
+  "description": "Та самая стандартная тема Luna из Windows XP. Пригодится, если в вашей сборке XP нет этой темы.",
+  "original_author": "Microsoft",
+  "slogan": "Классика жанра. No more.",
+  "price": 0,
+  "requirements": "**Операционная система:** Windows XP и выше",
+  "screenshot_urls": [
+    "//spire.lunastore.app/public/04/69/0469a57102981b2dc50c70f8092183f3b782919995d598910a38f4477dad805e.png",
+    "//spire.lunastore.app/public/af/da/afda528275a8d257efd6afb76c25b80c9e46c90e03098379795e014c56ac44cf.png",
+    "//spire.lunastore.app/public/67/01/6701c768573a13be097f63a79dfb1e771c98b5286a1b4b4333f70931331f36db.png"
+  ],
+  "developer_site": null,
+  "is_demo": false,
+  "is_under_dmca": false,
+  "icon_url": "//spire.lunastore.app/public/64/f3/64f33493ebf471e2bf6b7e7fac116961dce6157a9f7e601670c00939b109b2a8.png",
+  "user": {
+    "id": 1,
+    "username": "myslivets",
+    "telegram": "daneo03",
+    "discord": null,
+    "description": "Привет, мир!",
+    "website": "https://myslivets.com/",
+    "openvk": "dm",
+    "avatar_url": "//spire.lunastore.app/public/4c/d9/4cd9a4db8116107831b90c3b152b92adbaed2663b8dfa8b704bd93b694cebea8.jfif"
+  }
+}
+```
